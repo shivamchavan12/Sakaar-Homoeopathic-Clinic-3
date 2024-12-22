@@ -1,0 +1,173 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff; /* White background for content */
+    color: #333; /* Dark text for better readability */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Animation for fading the gradient */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+main {
+    flex: 1; /* Allows the main content to grow and take available space */
+}
+
+/* Fade-in effect for content */
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Headings */
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif; /* Elegant font for headings */
+    color: #800000; /* Maroon-red color for headings */
+}
+
+/* Link Styles */
+a {
+    color: #800000; /* Maroon-red color for links */
+}
+
+a:hover {
+    color: #b30000; /* Slightly brighter maroon for hover effect */
+}
+
+/* Header and Footer Styles */
+header {
+    background-color: #8B0000; /* Dark red for header */
+    color: white; /* White text in header */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow below the header */
+}
+
+footer {
+    background-color: #8B0000; /* Dark red for footer */
+    color: #fff; /* White text in footer */
+    padding: 2rem 0;
+}
+
+/* Fade-in effect for elements */
+
+
+.fade-in.show {
+    opacity: 1;
+}
+
+/* Hover underline animation for nav links */
+nav a:hover span {
+    width: 100%;
+}
+
+nav a span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: white;
+    transition: width 0.3s ease-in-out;
+}
+
+/* Content section background and text styles */
+.content-section {
+    background-color: #fff; /* White background for sections */
+    color: #333; /* Dark text for content */
+}
+
+.content-section h2 {
+    color: #800000; /* Maroon-red for section titles */
+}
+
+.content-section p, .content-section ul {
+    color: #333; /* Dark text for paragraph and list items */
+}
+
+.content-section a {
+    color: #800000; /* Maroon-red for links */
+}
+
+.content-section a:hover {
+    color: #b30000; /* Slightly brighter maroon for hover effect */
+}
+
+/* Hover effect for cards and treatment options */
+.section-card:hover, .treatment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Color transition for text hover */
+.text-[#800000]:hover, .hover\:text-[#b30000]:hover {
+    color: #b30000;
+}
+
+/* Appointment icon fixed position */
+#appointment-icon {
+    position: fixed;  /* Fixed position on the page */
+    bottom: 1rem;     /* 1rem from the bottom */
+    right: 1rem;      /* 1rem from the right */
+    z-index: 1000;    /* Ensure it stays above other content */
+    padding: 16px;
+    background-color: #800000;  /* Maroon background color */
+    color: white;      /* White icon color */
+    border-radius: 50%; /* Circular icon */
+    width: 64px;       /* Set a fixed width for the circle */
+    height: 64px;      /* Set a fixed height for the circle */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Smooth transition on hover */
+    
+    /* Flexbox to center content */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+}
+
+#appointment-icon:hover {
+    background-color: #b30000; /* Slightly brighter maroon on hover */
+    transform: scale(1.1);  /* Slight zoom-in effect */
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 767px) {
+    #appointment-icon {
+        width: 56px;       /* Slightly smaller circle on mobile */
+        height: 56px;      /* Slightly smaller circle on mobile */
+        bottom: 1rem;      /* Keep it at the bottom for small screens */
+        right: 1rem;       /* Keep it at the right for small screens */
+        padding: 12px;     /* Slightly smaller icon on mobile */
+    }
+}
+/* Hover underline animation for h2 span */
+.underline-effect {
+    position: relative;
+    display: inline-block;
+}
+
+.underline-effect:hover::after {
+    width: 100%;
+}
+
+.underline-effect::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #800000;
+    transition: width 0.3s ease-in-out;
+}

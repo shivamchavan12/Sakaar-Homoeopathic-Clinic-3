@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Homeopathy</title>
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="home-page.css">
+    
+</head>
+<body class="bg-white text-maroon-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+<header class="bg-red-#800000 text-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between p-4">
+        <!-- Logo and Title with redirect to index.html -->
+        <a href="index.html" class="flex items-center group">
+            <img src="logo.png" alt="Clinic Logo" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-white"> <!-- White border -->
+            <span class="text-3xl font-extrabold tracking-wide relative group hover:text-gray-300 transition duration-300">
+                Sakaar Homoeopathic
+                <!-- Underline span -->
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </span>
+        </a>
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden md:flex space-x-8">
+            <a href="awards.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Awards
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="testimonials.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Testimonials
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="appointment.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Appointment
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="#contact" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Contact
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+        </nav>
+        <!-- Mobile Menu Toggle Button -->
+        <button class="md:hidden text-2xl focus:outline-none" id="menu-toggle">&#9776;</button>
+    </div>
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-menu" class="hidden md:hidden flex flex-col bg-red-700 text-white">
+        <a href="awards.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Awards</a>
+        <a href="testimonials.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Testimonials</a>
+        <a href="appointment.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Appointment</a>
+        <a href="#contact" class="font-bold px-4 py-2 hover:bg-red-600 transition">Contact</a>
+    </nav>
+</header>
+
+<main class="container mx-auto p-4 flex-grow max-w-3xl">
+    <section id="appointment" class="bg-white rounded-lg shadow-lg p-4 md:p-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-[#800000] mb-6 text-center transition duration-300 hover:text-[#b30000]">
+            Book Appointment
+        </h2>
+
+        <!-- Flex Container: Images + Form -->
+        <div class="flex flex-col lg:flex-row items-center lg:items-start lg:space-x-8">
+            
+           <!-- Left Part: Images -->
+        <div class="flex-1 flex flex-col items-center justify-center space-y-4">
+                <img src="homo1.png" alt="Image 1"
+                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+                <img src="homo2.png" alt="Image 2"
+                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+                <img src="homo3.png" alt="Image 2"
+                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+        </div>
+
+            <!-- Right Part: Appointment Form -->
+            <div class="flex-1 w-full lg:max-w-sm">
+                <form id="appointment-form" class="space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="appt-name" class="block text-gray-700 font-medium mb-1">Name</label>
+                        <input type="text" id="appt-name" name="name" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label for="phone" class="block text-gray-700 font-medium mb-1">Phone No.</label>
+                        <input type="tel" id="phone" name="phone" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                    </div>
+
+                    <!-- Age + Gender -->
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label for="age" class="block text-gray-700 font-medium mb-1">Age</label>
+                            <input type="number" id="age" name="age" required
+                                class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                        </div>
+                        <div class="w-1/2">
+                            <label for="gender" class="block text-gray-700 font-medium mb-1">Gender</label>
+                            <select id="gender" name="gender" required
+                                class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Appointment Date -->
+                    <div>
+                        <label for="appt-date" class="block text-gray-700 font-medium mb-1">Appointment Date</label>
+                        <input type="date" id="appt-date" name="date" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                    </div>
+
+                    <!-- Complaints/Symptoms -->
+                    <div>
+                        <label for="complaints" class="block text-gray-700 font-medium mb-1">Complaints/Symptoms</label>
+                        <textarea id="complaints" name="complaints" rows="2" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
+                    </div>
+                    <div>
+                        <label for="remarks" class="block text-gray-700 font-medium mb-1">Remarks:</label>
+                        <textarea id="remarks" name="remarks" rows="2" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
+                        <input type="email" id="email" name="email" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-[#800000] text-white font-medium px-6 py-2 rounded hover:bg-[#b30000] focus:outline-none focus:ring-2 focus:ring-[#800000] transition">
+                            Book Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+
+    <footer class="bg-gray-200 text-gray-800 py-8">
+    <section id="contact">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 md:px-12">
+            <!-- Contact Information -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Contact Information
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-user-md text-gray-600 mr-2"></i>
+                    <span><strong>Doctor:</strong> Dr. Sarika Vaidya</span>
+                </p>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-envelope text-gray-600 mr-2"></i>
+                    <span><strong>Email:</strong> dr.sarikavaidya@example.com</span>
+                </p>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-phone text-gray-600 mr-2"></i>
+                    <span><strong>Phone:</strong> +1 234 567 890</span>
+                </p>
+            </div>
+
+            <!-- Social Media Links -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Follow Us
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="https://facebook.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-facebook-f mr-2"></i>
+                            <span>Facebook</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-twitter mr-2"></i>
+                            <span>Twitter</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-instagram mr-2"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Our Location -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Our Location
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-map-marker-alt text-gray-600 mr-2"></i>
+                    <span><strong>Address:</strong> 123 Wellness Street, Cityname, Country</span>
+                </p>
+                <a href="https://www.google.com/maps?q=123+Wellness+Street,+Cityname,+Country" 
+                   target="_blank" class="text-gray-800 underline-effect">
+                    View on Google Maps
+                </a>
+            </div>
+
+            <!-- Google Maps Embed -->
+            <div class="text-center">
+                <a href="https://www.google.com/maps?q=123+Wellness+Street,+Cityname,+Country" target="_blank">
+                    <img src="maps.jpg" alt="Map Location"
+                         class="rounded-lg shadow-lg mx-auto w-full sm:w-64 md:w-80 lg:w-1/2 hover:scale-105 transform transition-all duration-300 cursor-pointer" />
+                </a>
+            </div>
+        </div>
+
+        <!-- Floating Icon -->
+        <a href="appointment.html" id="appointment-icon" class="fixed bottom-4 right-4 z-50 p-4 bg-maroon-600 text-white rounded-full shadow-lg hover:bg-maroon-800 transition-all duration-300">
+            <i class="fas fa-calendar-check text-2xl"></i> <!-- Use a calendar icon from Font Awesome -->
+        </a>
+
+        <!-- Footer Bottom -->
+        <div class="mt-8 text-center text-sm border-t border-gray-500 pt-4">
+            <p>&copy; 2024 Homoeopathy Clinic. All rights reserved.</p>
+        </div>
+    </section>
+</footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Smoothly toggle the mobile menu visibility
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("f_o5os-Jb0pknRvPS"); // Replace with your own User ID
+        })();
+
+        // Form submission handling
+        document.getElementById('appointment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+
+            // Submit the form data to EmailJS
+            emailjs.sendForm('service_123456', 'template_abc123', form)
+                .then(function(response) {
+                    alert('Appointment booked successfully!');
+                    form.reset(); // Reset form fields
+                }, function(error) {
+                    alert('Failed to send email. Please try again later.');
+                });
+        });
+    </script>
+</body>
+</html>
