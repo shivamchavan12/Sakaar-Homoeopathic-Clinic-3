@@ -252,7 +252,7 @@
 
         // Initialize EmailJS
         (function() {
-            emailjs.init("f_o5os-Jb0pknRvPS"); // Replace with your own User ID
+            emailjs.init("XJ0w7wtg2pCTEXyAf"); // Replace with your own User ID
         })();
 
         // Form submission handling
@@ -261,7 +261,13 @@
             const form = event.target;
 
             // Submit the form data to EmailJS
-            emailjs.sendForm('service_123456', 'template_abc123', form)
+            emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', form)
+                .then(function(response) {
+                }, function(error) {
+                    alert('Failed to send email. Please try again later.');
+                });
+
+            emailjs.sendForm('service_x4wl48l', 'template_gcgjpsm', form)
                 .then(function(response) {
                     alert('Appointment booked successfully!');
                     form.reset(); // Reset form fields
