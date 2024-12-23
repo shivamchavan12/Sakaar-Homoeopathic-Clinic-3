@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakaar Homoeopathic Clinic</title>
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="home-page.css">
+    
+</head>
+<body class="bg-white text-maroon-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+<header class="bg-red-#800000 text-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between p-4">
+        <!-- Logo and Title with redirect to index.html -->
+        <a href="index.html" class="flex items-center group">
+            <img src="logo.png" alt="Clinic Logo" class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-white"> <!-- White border -->
+            <span class="text-3xl font-extrabold tracking-wide relative group hover:text-gray-300 transition duration-300">
+                Sakaar Homoeopathic
+                <!-- Underline span -->
+                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+            </span>
+        </a>
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden md:flex space-x-8">
+            <a href="awards.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Awards
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="testimonials.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Testimonials
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="appointment.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Appointment
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="#contact" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Contact
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+            <a href="login.html" class="font-bold relative hover:text-gray-200 transition duration-300">
+                Login
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
+            </a>
+        </nav>
+        <!-- Mobile Menu Toggle Button -->
+        <button class="md:hidden text-2xl focus:outline-none" id="menu-toggle">&#9776;</button>
+    </div>
+    <!-- Mobile Navigation Menu -->
+    <nav id="mobile-menu" class="hidden md:hidden flex flex-col bg-red-700 text-white">
+        <a href="awards.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Awards</a>
+        <a href="testimonials.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Testimonials</a>
+        <a href="appointment.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Appointment</a>
+        <a href="#contact" class="font-bold px-4 py-2 hover:bg-red-600 transition">Contact</a>
+        <a href="login.html" class="font-bold px-4 py-2 hover:bg-red-600 transition">Login</a>
+    </nav>
+</header>
+
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-8 max-w-lg">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6">Sign Up</h2>
+
+        <!-- Sign-Up Form -->
+        <form id="signup-form" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+            <!-- Full Name -->
+            <div class="mb-4">
+                <label for="full-name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                <input type="text" id="full-name" name="full-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#800000]">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#800000]">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input type="password" id="password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#800000]">
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-6">
+                <label for="confirm-password" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#800000]">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-center">
+                <button type="submit" id="signup-btn" class="bg-[#800000] text-white font-medium px-6 py-2 rounded-lg hover:bg-[#b30000] focus:outline-none focus:ring-2 focus:ring-[#800000] transition w-full sm:w-auto">
+                    Sign Up
+                </button>
+            </div>
+        </form>
+
+        <!-- Login Redirect -->
+        <div class="mt-4 text-center">
+            <p class="text-gray-700">Already have an account? <a href="login.html" class="text-[#800000] font-semibold">Log In</a></p>
+        </div>
+    </div>
+<footer class="bg-gray-200 text-gray-800 py-8">
+    <section id="contact">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 md:px-12">
+            <!-- Contact Information -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Contact Information
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-user-md text-gray-600 mr-2"></i>
+                    <span><strong>Doctor:</strong> Dr. Sarika Vaidya</span>
+                </p>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-envelope text-gray-600 mr-2"></i>
+                    <span><strong>Email:</strong> dr.sarikavaidya@example.com</span>
+                </p>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-phone text-gray-600 mr-2"></i>
+                    <span><strong>Phone:</strong> +1 234 567 890</span>
+                </p>
+            </div>
+
+            <!-- Social Media Links -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Follow Us
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <ul class="space-y-3">
+                    <li>
+                        <a href="https://facebook.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-facebook-f mr-2"></i>
+                            <span>Facebook</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-twitter mr-2"></i>
+                            <span>Twitter</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600">
+                            <i class="fab fa-instagram mr-2"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Our Location -->
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block">
+                    Our Location
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
+                </h3>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-map-marker-alt text-gray-600 mr-2"></i>
+                    <span><strong>Address:</strong> 123 Wellness Street, Cityname, Country</span>
+                </p>
+                <a href="https://www.google.com/maps?q=123+Wellness+Street,+Cityname,+Country" 
+                   target="_blank" class="text-gray-800 underline-effect">
+                    View on Google Maps
+                </a>
+            </div>
+
+            <!-- Google Maps Embed -->
+            <div class="text-center">
+                <a href="https://www.google.com/maps?q=123+Wellness+Street,+Cityname,+Country" target="_blank">
+                    <img src="maps.jpg" alt="Map Location"
+                         class="rounded-lg shadow-lg mx-auto w-full sm:w-64 md:w-80 lg:w-1/2 hover:scale-105 transform transition-all duration-300 cursor-pointer" />
+                </a>
+            </div>
+        </div>
+
+        <!-- Floating Icon -->
+        <a href="appointment.html" id="appointment-icon" class="fixed bottom-4 right-4 z-50 p-4 bg-maroon-600 text-white rounded-full shadow-lg hover:bg-maroon-800 transition-all duration-300">
+            <i class="fas fa-calendar-check text-2xl"></i> <!-- Use a calendar icon from Font Awesome -->
+        </a>
+
+        <!-- Footer Bottom -->
+        <div class="mt-8 text-center text-sm border-t border-gray-500 pt-4">
+            <p>&copy; 2024 Homoeopathy Clinic. All rights reserved.</p>
+        </div>
+    </section>
+</footer>
+    <!-- JavaScript for Redirection -->
+    <script>
+        const signupForm = document.getElementById('signup-form');
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission for now
+
+            // Simulate successful signup (You can replace this with actual server-side logic)
+            setTimeout(function() {
+                // Redirect to login page after successful signup
+                window.location.href = 'login.html'; // Change this to your actual login page URL
+            }, 1000); // Add a slight delay to mimic real-world behavior
+        });
+    </script>
+
+</body>
+</html>
+
+<title>Sign Up | Sakaar Homoeopathic</title>
