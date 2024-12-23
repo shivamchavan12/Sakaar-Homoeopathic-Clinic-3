@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sakaar Homoeopathic Clinic</title>
+    <title>Sign Up | Sakaar Homoeopathic</title>
     <!-- Link to Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -194,6 +194,12 @@
 </footer>
     <!-- JavaScript for Redirection -->
     <script>
+         // Smoothly toggle the mobile menu visibility
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
         const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission for now
@@ -209,4 +215,3 @@
 </body>
 </html>
 
-<title>Sign Up | Sakaar Homoeopathic</title>

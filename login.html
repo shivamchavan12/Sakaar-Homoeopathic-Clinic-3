@@ -182,6 +182,12 @@
 </footer>
     <!-- Optional JavaScript -->
     <script>
+     // Smoothly toggle the mobile menu visibility
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
         document.getElementById("login-form").addEventListener("submit", function(e) {
             e.preventDefault();
             // Add form validation or authentication logic here
