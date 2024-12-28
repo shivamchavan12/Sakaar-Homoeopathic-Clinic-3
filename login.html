@@ -9,7 +9,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="home-page.css">
-    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
 
@@ -61,7 +63,7 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
 
         <!-- Login Card -->
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div id="login-card" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-3xl font-bold text-center mb-6 text-gray-700">Login</h2>
 
             <!-- Login Form -->
@@ -91,6 +93,37 @@
             <div class="mt-4 text-center">
                 <p class="text-gray-600">Don't have an account? <a href="signup.html" class="text-red-600 hover:underline">Sign up</a></p>
             </div>
+        </div>
+
+        <div id="profile-card" class="hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-3xl font-bold text-center mb-6 text-gray-700">My Profile</h2>
+            
+            <!-- User Details -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
+                <p id="profile-email" class="text-gray-600 mb-2"></p>
+                <p id="profile-name" class="text-gray-600 mb-2"></p>
+            </div>
+    
+            <!-- Appointments Section -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Upcoming Appointments</h3>
+                <div id="upcoming-appointments" class="space-y-4">
+                    <!-- Appointments will be dynamically inserted here -->
+                </div>
+            </div>
+    
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Past Appointments</h3>
+                <div id="past-appointments" class="space-y-4">
+                    <!-- Past appointments will be dynamically inserted here -->
+                </div>
+            </div>
+    
+            <!-- Sign Out Button -->
+            <button id="sign-out-btn" class="w-full py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600">
+                Sign Out
+            </button>
         </div>
     </div>
     <footer class="bg-gray-200 text-gray-800 py-8">
@@ -182,18 +215,116 @@
 </footer>
     <!-- Optional JavaScript -->
     <script>
-     // Smoothly toggle the mobile menu visibility
+        // Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyBZvBHPp6bzmBaTaQBQ8JBsgTKM12dtEjM",
+        authDomain: "sakaar-homoeopathic-clinic.firebaseapp.com",
+        projectId: "sakaar-homoeopathic-clinic",
+        storageBucket: "sakaar-homoeopathic-clinic.firebasestorage.app",
+        messagingSenderId: "1028319469",
+        appId: "1:1028319469:web:e449a194c35adaf1a884e4"
+        };
+    
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    
+        // Check authentication state
+        firebase.auth().onAuthStateChanged(function(user) {
+            const loginCard = document.getElementById('login-card');
+            const profileCard = document.getElementById('profile-card');
+            
+            if (user) {
+                // User is signed in
+                loginCard.classList.add('hidden');
+                profileCard.classList.remove('hidden');
+                
+                // Update profile information
+                document.getElementById('profile-email').textContent = `Email: ${user.email}`;
+                document.getElementById('profile-name').textContent = `Name: ${user.displayName || 'Not set'}`;
+                
+                // Fetch and display appointments
+                fetchAppointments(user.uid);
+            } else {
+                // No user is signed in
+                loginCard.classList.remove('hidden');
+                profileCard.classList.add('hidden');
+            }
+        });
+    
         document.getElementById('menu-toggle').addEventListener('click', function() {
             var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
 
-        document.getElementById("login-form").addEventListener("submit", function(e) {
+        // Login form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Add form validation or authentication logic here
-            alert("Login form submitted!");
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Login successful
+                })
+                .catch((error) => {
+                    alert('Login failed: ' + error.message);
+                });
         });
+    
+        // Sign out functionality
+        document.getElementById('sign-out-btn').addEventListener('click', function() {
+            firebase.auth().signOut().then(() => {
+                // Sign-out successful
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                alert('Sign out failed: ' + error.message);
+            });
+        });
+    
+        // Function to fetch and display appointments
+        function fetchAppointments(userId) {
+            const upcomingContainer = document.getElementById('upcoming-appointments');
+            const pastContainer = document.getElementById('past-appointments');
+            
+            db.collection('appointments')
+                .where('userId', '==', userId)
+                .orderBy('date', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    upcomingContainer.innerHTML = '';
+                    pastContainer.innerHTML = '';
+                    
+                    const now = new Date();
+                    
+                    querySnapshot.forEach((doc) => {
+                        const appointment = doc.data();
+                        const appointmentDate = new Date(appointment.date);
+                        
+                        const appointmentEl = `
+                            <div class="p-4 border rounded-lg">
+                                <p class="font-semibold">Date: ${appointment.date}</p>
+                                <p>Complaints: ${appointment.complaints}</p>
+                                <p>Status: ${appointmentDate > now ? 'Upcoming' : 'Completed'}</p>
+                            </div>
+                        `;
+                        
+                        if (appointmentDate > now) {
+                            upcomingContainer.innerHTML += appointmentEl;
+                        } else {
+                            pastContainer.innerHTML += appointmentEl;
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching appointments: ", error);
+                });
+        }
+    
+        // Rest of your existing JavaScript remains the same
     </script>
 
 </body>
 </html>
+
+
