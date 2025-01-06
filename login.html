@@ -320,40 +320,101 @@
 
     // Function to load profile page content
     function loadProfilePage() {
-        auth.currentUser.getIdTokenResult()
-            .then(() => {
-                // Fetch user details
-                const user = auth.currentUser;
-                db.collection('users').doc(user.uid).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            authSection.innerHTML = `
-                                <div class="text-center">
-                                    <h2 class="text-2xl font-bold text-[#800000] mb-4">Welcome, ${userData.name}!</h2>
-                                    <p class="text-gray-700 mb-2"><strong>Email:</strong> ${userData.email}</p>
-                                    <button id="logout-btn" class="bg-[#800000] text-white font-medium px-6 py-2 rounded hover:bg-[#b30000] focus:outline-none focus:ring-2 focus:ring-[#800000] transition">
-                                        Logout
-                                    </button>
-                                </div>
-                            `;
+    auth.currentUser.getIdTokenResult()
+        .then(() => {
+            // Fetch user details
+            const user = auth.currentUser;
 
-                            // Logout functionality
-                            const logoutBtn = document.getElementById('logout-btn');
-                            logoutBtn.addEventListener('click', () => {
-                                auth.signOut().then(() => {
-                                    window.location.reload();
+            // Fetch user profile details
+            db.collection('users').doc(user.uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+
+                        // Fetch appointments for the current user
+                        db.collection('appointments')
+                            .where('userId', '==', user.uid)
+                            .orderBy('date', 'desc') // Ensure the Firestore index exists for this query
+                            .get()
+                            .then((querySnapshot) => {
+                                let upcomingAppointments = [];
+                                let previousAppointments = [];
+                                const currentDate = new Date();
+
+                                querySnapshot.forEach((doc) => {
+                                    const appointment = doc.data();
+                                    appointment.date = new Date(appointment.date);
+
+                                    if (appointment.date >= currentDate) {
+                                        upcomingAppointments.push(appointment);
+                                    } else {
+                                        previousAppointments.push(appointment);
+                                    }
                                 });
+
+                                // Generate HTML for appointments
+                                const upcomingAppointmentsHTML = upcomingAppointments.map(appointment => `
+                                    <li>
+                                        <strong>Date:</strong> ${appointment.date.toLocaleDateString()} <br>
+                                        <strong>Complaints:</strong> ${appointment.complaints || 'N/A'} <br>
+                                        <strong>Status:</strong> ${appointment.status || 'Pending'}
+                                    </li>
+                                `).join('');
+
+                                const previousAppointmentsHTML = previousAppointments.map(appointment => `
+                                    <li>
+                                        <strong>Date:</strong> ${appointment.date.toLocaleDateString()} <br>
+                                        <strong>Complaints:</strong> ${appointment.complaints || 'N/A'} <br>
+                                        <strong>Status:</strong> ${appointment.status || 'Completed'}
+                                    </li>
+                                `).join('');
+
+                                // Update the profile section with user data and appointments
+                                authSection.innerHTML = `
+                                    <div class="text-center">
+                                        <h2 class="text-2xl font-bold text-[#800000] mb-4">Welcome, ${userData.name}!</h2>
+                                        <p class="text-gray-700 mb-2"><strong>Email:</strong> ${userData.email}</p>
+
+                                        <div class="mt-4 text-left">
+                                            <h3 class="text-lg font-bold text-[#800000] mb-2">Upcoming Appointments</h3>
+                                            <ul class="list-disc pl-5 text-gray-700">
+                                                ${upcomingAppointmentsHTML || '<li>No upcoming appointments.</li>'}
+                                            </ul>
+
+                                            <h3 class="text-lg font-bold text-[#800000] mt-4 mb-2">Previous Appointments</h3>
+                                            <ul class="list-disc pl-5 text-gray-700">
+                                                ${previousAppointmentsHTML || '<li>No previous appointments.</li>'}
+                                            </ul>
+                                        </div>
+
+                                        <button id="logout-btn" class="bg-[#800000] text-white font-medium px-6 py-2 mt-4 rounded hover:bg-[#b30000] focus:outline-none focus:ring-2 focus:ring-[#800000] transition">
+                                            Logout
+                                        </button>
+                                    </div>
+                                `;
+
+                                // Logout functionality
+                                const logoutBtn = document.getElementById('logout-btn');
+                                logoutBtn.addEventListener('click', () => {
+                                    auth.signOut().then(() => {
+                                        window.location.reload();
+                                    });
+                                });
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching appointments:", error);
+                                alert("Failed to load appointments.");
                             });
-                        } else {
-                            alert("User data not found!");
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching user data: ", error);
-                    });
-            });
-    }
+                    } else {
+                        alert("User data not found!");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching user data: ", error);
+                });
+        });
+}
+
 
     // Menu button functionality for mobile
     menuBtn.addEventListener('click', function () {

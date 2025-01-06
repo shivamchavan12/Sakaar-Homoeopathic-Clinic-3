@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Sakaar Homoeopathic Clinic</title>
     <!-- Link to Google Fonts -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -15,7 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
-
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 <!-- Navigation Bar -->
 <header class="bg-red-800  text-white shadow-lg sticky top-0 z-50">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
@@ -275,25 +278,20 @@
 </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        // JavaScript for toggling the mobile menu
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
-    // Toggle menu visibility on button click
     menuBtn.addEventListener('click', function () {
         mobileMenu.classList.toggle('hidden');
     });
 
-    // Optional: Close the menu if clicking outside it
     document.addEventListener('click', function (event) {
         if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
             mobileMenu.classList.add('hidden');
         }
     });
-});
 
     const firebaseConfig = {
         apiKey: "AIzaSyBZvBHPp6bzmBaTaQBQ8JBsgTKM12dtEjM",
@@ -303,71 +301,84 @@ document.addEventListener('DOMContentLoaded', function () {
         messagingSenderId: "1028319469",
         appId: "1:1028319469:web:e449a194c35adaf1a884e4"
     };
-        
-        firebase.initializeApp(firebaseConfig);
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    emailjs.init("XJ0w7wtg2pCTEXyAf");
 
-    // Check authentication state
+    const form = document.getElementById('appointment-form');
+    const formInputs = form.querySelectorAll('input, textarea, select, button[type="submit"]');
+
+    function toggleFormElements(enable) {
+        formInputs.forEach(element => {
+            element.disabled = !enable;
+        });
+    }
+
+    async function saveAppointmentToFirestore(appointmentData, userId) {
+        try {
+            await db.collection('appointments').add({
+                ...appointmentData,
+                userId: userId,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'pending'
+            });
+        } catch (error) {
+            console.error('Firestore Error:', error);
+            throw error;
+        }
+    }
+
     firebase.auth().onAuthStateChanged(function(user) {
         const appointmentSection = document.getElementById('appointment');
         const loginMessage = document.getElementById('login-required-message');
         
         if (user) {
-            // User is signed in
             appointmentSection.classList.remove('hidden');
             loginMessage.classList.add('hidden');
+            toggleFormElements(true);
         } else {
-            // No user is signed in
             appointmentSection.classList.add('hidden');
             loginMessage.classList.remove('hidden');
+            toggleFormElements(false);
         }
     });
 
-    // Modified form submission to include user ID
-    document.getElementById('appointment-form').addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
-        const form = event.target;
+        
         const user = firebase.auth().currentUser;
-
         if (!user) {
             alert('Please login to book an appointment');
             return;
         }
 
-        // Add user ID to form data
-        const formData = new FormData(form);
-        formData.append('userId', user.uid);
+        try {
+            const formData = new FormData(this);
+            const appointmentData = {};
+            formData.forEach((value, key) => {
+                appointmentData[key] = value;
+            });
 
+            await Promise.all([
+                saveAppointmentToFirestore(appointmentData, user.uid),
+                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this),
+                emailjs.sendForm('service_x4wl48l', 'template_gcgjpsm', this)
+            ]);
 
-        // Initialize EmailJS
-        (function() {
-            emailjs.init("XJ0w7wtg2pCTEXyAf"); // Replace with your own User ID
-        })();
-
-        // Form submission handling
-        document.getElementById('appointment-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const form = event.target;
-
-            // Submit the form data to EmailJS
-            emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', form)
-                .then(function(response) {
-                }, function(error) {
-                    alert('Failed to send email. Please try again later.');
-                });
-
-            emailjs.sendForm('service_x4wl48l', 'template_gcgjpsm', form)
-                .then(function(response) {
-                    alert('Appointment booked successfully!');
-                    form.reset(); // Reset form fields
-                }, function(error) {
-                    alert('Failed to send email. Please try again later.');
-                });
-        });
+            alert('Appointment booked successfully!');
+            form.reset();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to process appointment. Please try again later.');
+        }
     });
+
     AOS.init({
-        duration: 1000,  // Duration of the animation in ms
-        once: true,      // Animation will only happen once
+        duration: 1000,
+        once: true,
     });
-    </script>
+});
+</script>
 </body>
 </html>
