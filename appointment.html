@@ -15,6 +15,33 @@
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
+<style>
+/* Keyframes for fade-in-right animation */
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px); /* Start slightly to the right */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0); /* End at the original position */
+    }
+}
+
+/* Apply the animation */
+.fade-in-right {
+    opacity: 0; /* Hidden by default */
+    transform: translateX(50px); /* Start position */
+    animation: fadeInRight 1s ease-out forwards; /* 1-second animation */
+}
+
+/* Triggering animation only when the element is in the viewport */
+.fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+</style>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -250,7 +277,7 @@
             </div>
 
             <!-- Map Section -->
-            <div class="flex-1 group hover:scale-105 transition-all duration-500" data-aos="fade-left" data-aos-duration="1000">
+            <div class="flex-1 group hover:scale-105 transition-all duration-500 fade-in-right">
                 <h3 class="text-xl font-semibold mb-4 text-maroon-700 group-hover:text-gray-700">Find Us on Map</h3>
                 <div class="w-full h-32 rounded-lg overflow-hidden shadow-lg border border-gray-700 group-hover:shadow-xl">
                     <iframe 
@@ -292,7 +319,6 @@
             mobileMenu.classList.add('hidden');
         }
     });
-
     const firebaseConfig = {
         apiKey: "AIzaSyBZvBHPp6bzmBaTaQBQ8JBsgTKM12dtEjM",
         authDomain: "sakaar-homoeopathic-clinic.firebaseapp.com",
@@ -373,12 +399,26 @@
             alert('Failed to process appointment. Please try again later.');
         }
     });
-
-    AOS.init({
-        duration: 1000,
-        once: true,
-    });
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const elements = document.querySelectorAll('.fade-in-right');
+
+    const handleScroll = () => {
+        elements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('visible');
+            }
+        });
+    };
+
+    // Listen for scroll events
+    window.addEventListener('scroll', handleScroll);
+
+    // Initial check in case elements are already in view
+    handleScroll();
+});
+
 </script>
 </body>
 </html>

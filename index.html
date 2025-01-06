@@ -12,6 +12,30 @@
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
+<style>
+    /* Global Reset for body */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Ensures consistent box-sizing across all browsers */
+html {
+    box-sizing: border-box; /* Apply border-box for better layout control */
+}
+
+/* Apply border-box box-sizing for all elements */
+*, *::before, *::after {
+    box-sizing: inherit; /* Inherit box-sizing rule from html */
+}
+@media (max-width: 480px) {
+        #appointment-icon {
+            right: 10vw; /* Adjusting right margin for mobile */
+        }
+    }
+</style>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
     <!-- Navigation Bar -->
     <header class="bg-red-800 text-white shadow-lg sticky top-0 z-50">
@@ -367,10 +391,14 @@
         </div>
 
         <!-- Floating Icon -->
-        <a href="appointment.html" id="appointment-icon" class="fixed bottom-4 right-4 z-50 p-4 bg-maroon-600 text-white rounded-full shadow-lg hover:bg-maroon-800 transition-all duration-300 transform hover:scale-110">
-            <i class="fas fa-calendar-check text-2xl"></i> <!-- Use a calendar icon from Font Awesome -->
-        </a>
+        <a href="appointment.html" 
+    id="appointment-icon" 
+    class="fixed bottom-4 right-4 z-50 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-r from-maroon-500 to-red-500 text-white rounded-full shadow-lg hover:shadow-2xl hover:from-maroon-600 hover:to-red-600 transition-all duration-300 transform hover:scale-110">
+    <i class="fas fa-calendar-check text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"></i>
+</a>
 
+
+     
         <!-- Footer Bottom -->
         <div class="mt-8 text-center text-sm border-t border-gray-500 pt-4 group hover:text-maroon-700 transition-all duration-300">
             <p>&copy; 2024 Homoeopathy Clinic. All rights reserved.</p>
