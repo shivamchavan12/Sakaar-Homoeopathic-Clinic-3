@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
 <style>
-    /* Global Reset for body */
+   /* Global Reset for body */
 body {
     margin: 0;
     padding: 0;
@@ -30,11 +30,56 @@ html {
 *, *::before, *::after {
     box-sizing: inherit; /* Inherit box-sizing rule from html */
 }
-@media (max-width: 480px) {
-        #appointment-icon {
-            right: 10vw; /* Adjusting right margin for mobile */
-        }
+
+/* Floating Appointment Button */
+#appointment-icon {
+    position: fixed;
+    bottom: 5%; /* Safe margin from bottom */
+    right: 5%; /* Safe margin from right */
+    z-index: 1000; /* Ensure it is on top of all elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #800000, #FF0000); /* Gradient background */
+    color: white;
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Smooth animations */
+    width: 60px; /* Default size */
+    height: 60px;
+    font-size: 24px; /* Icon size */
+    overflow: hidden; /* Prevent content spilling */
+}
+
+/* Hover Effects */
+#appointment-icon:hover {
+    transform: scale(1.15); /* Slightly enlarge on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #660000, #CC0000); /* Darker gradient on hover */
+}
+
+/* Responsive Design for Tablets */
+@media (max-width: 768px) {
+    #appointment-icon {
+        bottom: 4%; /* Adjust bottom space for tablets */
+        right: 4%; /* Adjust right space for tablets */
+        width: 50px; /* Slightly smaller button */
+        height: 50px;
+        font-size: 20px;
     }
+}
+
+/* Responsive Design for Small Devices */
+@media (max-width: 480px) {
+    #appointment-icon {
+        bottom: 3%; /* Adjust bottom space for mobile devices */
+        right: 3%; /* Adjust right space for mobile devices */
+        width: 45px; /* Smaller size for small devices */
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
 </style>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
     <!-- Navigation Bar -->
@@ -391,11 +436,10 @@ html {
         </div>
 
         <!-- Floating Icon -->
-        <a href="appointment.html" 
-    id="appointment-icon" 
-    class="fixed bottom-4 right-4 z-50 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-r from-maroon-500 to-red-500 text-white rounded-full shadow-lg hover:shadow-2xl hover:from-maroon-600 hover:to-red-600 transition-all duration-300 transform hover:scale-110">
-    <i class="fas fa-calendar-check text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"></i>
-</a>
+        <a href="appointment.html" id="appointment-icon">
+            <i class="fas fa-calendar-check"></i>
+        </a>
+        
 
 
      
