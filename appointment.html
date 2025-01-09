@@ -362,8 +362,7 @@
 
             await Promise.all([
                 saveAppointmentToFirestore(appointmentData, user.uid),
-                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this),
-                emailjs.sendForm('service_x4wl48l', 'template_gcgjpsm', this)
+                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this)
             ]);
 
             alert('Appointment booked successfully!');
