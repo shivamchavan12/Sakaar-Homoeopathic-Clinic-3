@@ -318,102 +318,176 @@
         }
     });
 
+    firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        db.collection('users').doc(user.uid).get()
+            .then((doc) => {
+                const userData = doc.data();
+                const restrictedUntil = userData.restrictedUntil?.toDate();
+
+                if (restrictedUntil && restrictedUntil > new Date()) {
+                    alert(`You cannot book an appointment until ${restrictedUntil.toLocaleDateString()}.`);
+                } else {
+                    toggleFormElements(true);
+                }
+            });
+    }
+});
+
     // Function to load profile page content
     function loadProfilePage() {
     auth.currentUser.getIdTokenResult()
         .then(() => {
-            // Fetch user details
             const user = auth.currentUser;
 
-            // Fetch user profile details
-            db.collection('users').doc(user.uid).get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        const userData = doc.data();
+            // Check if the user is an admin
+            if (user.email === "parkar.nikhil1406@gmail.com") {
+                // Admin view
+                db.collection('appointments').orderBy('date', 'desc').get()
+                    .then((querySnapshot) => {
+                        let appointmentsHTML = '';
+                        querySnapshot.forEach((doc) => {
+                            const appointment = doc.data();
+                            appointment.id = doc.id;
 
-                        // Fetch appointments for the current user
-                        db.collection('appointments')
-                            .where('userId', '==', user.uid)
-                            .orderBy('date', 'desc') // Ensure the Firestore index exists for this query
-                            .get()
-                            .then((querySnapshot) => {
-                                let upcomingAppointments = [];
-                                let previousAppointments = [];
-                                const currentDate = new Date();
+                            appointmentsHTML += `
+                                <li>
+                                    <strong>Date:</strong> ${new Date(appointment.date).toLocaleDateString()} <br>
+                                    <strong>User:</strong> ${appointment.userId} <br>
+                                    <strong>Status:</strong> ${appointment.status || 'Pending'} <br>
+                                    <button class="accept-btn" data-id="${appointment.id}" data-email="${appointment.email}">
+                                        Accept
+                                    </button>
+                                    <button class="decline-btn" data-id="${appointment.id}" data-email="${appointment.email}">
+                                        Decline
+                                    </button>
+                                </li>
+                            `;
+                        });
 
-                                querySnapshot.forEach((doc) => {
-                                    const appointment = doc.data();
-                                    appointment.date = new Date(appointment.date);
+                        authSection.innerHTML = `
+                            <h2 class="text-2xl font-bold text-[#800000] mb-4">Admin Portal</h2>
+                            <ul class="list-disc pl-5 text-gray-700">
+                                ${appointmentsHTML || '<li>No appointments found.</li>'}
+                            </ul>
+                        `;
 
-                                    if (appointment.date >= currentDate) {
-                                        upcomingAppointments.push(appointment);
-                                    } else {
-                                        previousAppointments.push(appointment);
-                                    }
-                                });
+                        document.querySelectorAll('.accept-btn').forEach((btn) => {
+                            btn.addEventListener('click', (e) => handleAppointmentStatus(e, 'accepted'));
+                        });
 
-                                // Generate HTML for appointments
-                                const upcomingAppointmentsHTML = upcomingAppointments.map(appointment => `
-                                    <li>
-                                        <strong>Date:</strong> ${appointment.date.toLocaleDateString()} <br>
-                                        <strong>Complaints:</strong> ${appointment.complaints || 'N/A'} <br>
-                                        <strong>Status:</strong> ${appointment.status || 'Pending'}
-                                    </li>
-                                `).join('');
-
-                                const previousAppointmentsHTML = previousAppointments.map(appointment => `
-                                    <li>
-                                        <strong>Date:</strong> ${appointment.date.toLocaleDateString()} <br>
-                                        <strong>Complaints:</strong> ${appointment.complaints || 'N/A'} <br>
-                                        <strong>Status:</strong> ${appointment.status || 'Completed'}
-                                    </li>
-                                `).join('');
-
-                                // Update the profile section with user data and appointments
-                                authSection.innerHTML = `
-                                    <div class="text-center">
-                                        <h2 class="text-2xl font-bold text-[#800000] mb-4">Welcome, ${userData.name}!</h2>
-                                        <p class="text-gray-700 mb-2"><strong>Email:</strong> ${userData.email}</p>
-
-                                        <div class="mt-4 text-left">
-                                            <h3 class="text-lg font-bold text-[#800000] mb-2">Upcoming Appointments</h3>
-                                            <ul class="list-disc pl-5 text-gray-700">
-                                                ${upcomingAppointmentsHTML || '<li>No upcoming appointments.</li>'}
-                                            </ul>
-
-                                            <h3 class="text-lg font-bold text-[#800000] mt-4 mb-2">Previous Appointments</h3>
-                                            <ul class="list-disc pl-5 text-gray-700">
-                                                ${previousAppointmentsHTML || '<li>No previous appointments.</li>'}
-                                            </ul>
-                                        </div>
-
-                                        <button id="logout-btn" class="bg-[#800000] text-white font-medium px-6 py-2 mt-4 rounded hover:bg-[#b30000] focus:outline-none focus:ring-2 focus:ring-[#800000] transition">
-                                            Logout
-                                        </button>
-                                    </div>
-                                `;
-
-                                // Logout functionality
-                                const logoutBtn = document.getElementById('logout-btn');
-                                logoutBtn.addEventListener('click', () => {
-                                    auth.signOut().then(() => {
-                                        window.location.reload();
-                                    });
-                                });
-                            })
-                            .catch((error) => {
-                                console.error("Error fetching appointments:", error);
-                                alert("Failed to load appointments.");
-                            });
-                    } else {
-                        alert("User data not found!");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching user data: ", error);
-                });
+                        document.querySelectorAll('.decline-btn').forEach((btn) => {
+                            btn.addEventListener('click', (e) => handleAppointmentStatus(e, 'declined'));
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching appointments:', error);
+                    });
+            } else {
+                // User view (existing functionality)
+                loadUserAppointments(user);
+            }
         });
 }
+
+function renderAppointments(upcomingAppointments, previousAppointments) {
+    const now = new Date();
+    const upcomingHTML = upcomingAppointments.map(a => `
+        <li>
+            <strong>Date:</strong> ${new Date(a.date).toLocaleDateString()} <br>
+            <strong>Status:</strong> ${a.status || 'Pending'} <br>
+            ${!a.rescheduled ? `
+                <button class="reschedule-btn" data-id="${a.id}">
+                    Reschedule
+                </button>
+            ` : '<p>Reschedule used</p>'}
+            <button class="delete-btn" data-id="${a.id}">
+                Delete
+            </button>
+        </li>
+    `).join('');
+
+    authSection.innerHTML = `
+        <h3 class="text-lg font-bold text-[#800000] mb-2">Upcoming Appointments</h3>
+        <ul class="list-disc pl-5 text-gray-700">
+            ${upcomingHTML || '<li>No upcoming appointments.</li>'}
+        </ul>
+    `;
+
+    document.querySelectorAll('.reschedule-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => rescheduleAppointment(e));
+    });
+
+    document.querySelectorAll('.delete-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => deleteAppointment(e));
+    });
+}
+
+function rescheduleAppointment(event) {
+    const appointmentId = event.target.dataset.id;
+    const newDate = prompt('Enter a new date (YYYY-MM-DD):');
+
+    if (newDate) {
+        db.collection('appointments').doc(appointmentId).update({
+            date: newDate,
+            rescheduled: true,
+        }).then(() => {
+            emailjs.send("service_x4wl48l", "template_oyp3vgd", {
+                to_email: "parkar.nikhil1406@gmail.com",
+                new_date: newDate,
+            });
+
+            alert('Appointment rescheduled.');
+            loadProfilePage();
+        }).catch((error) => {
+            console.error('Error rescheduling appointment:', error);
+        });
+    }
+}
+
+function deleteAppointment(event) {
+    const appointmentId = event.target.dataset.id;
+
+    if (confirm('Are you sure? Once deleted, you cannot rebook for 15 days.')) {
+        db.collection('appointments').doc(appointmentId).delete()
+            .then(() => {
+                const user = firebase.auth().currentUser;
+
+                db.collection('users').doc(user.uid).update({
+                    restrictedUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
+                });
+
+                emailjs.send("service_6c19psq", "template_rieejmg", {
+                    to_email: "parkar.nikhil1406@gmail.com",
+                });
+
+                alert('Appointment deleted.');
+                loadProfilePage();
+            })
+            .catch((error) => {
+                console.error('Error deleting appointment:', error);
+            });
+    }
+}
+
+    function handleAppointmentStatus(event, status) {
+        const appointmentId = event.target.dataset.id;
+        const userEmail = event.target.dataset.email;
+
+        db.collection('appointments').doc(appointmentId).update({ status })
+            .then(() => {
+                emailjs.send("service_6c19psq", "template_5i788ib", {
+                    to_email: userEmail,
+                    status,
+                });
+
+                alert(`Appointment ${status}.`);
+                loadProfilePage();
+            })
+            .catch((error) => {
+                console.error('Error updating appointment status:', error);
+            });
+    }
 
 
     // Menu button functionality for mobile
