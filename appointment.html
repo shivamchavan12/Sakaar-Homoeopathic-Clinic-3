@@ -309,6 +309,11 @@
     document.addEventListener('DOMContentLoaded', function () {
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
+    const form = document.getElementById('appointment-form');
+    const formInputs = form.querySelectorAll('input, textarea, select, button[type="submit"]');
+    const restrictionMessage = document.createElement('div');
+    restrictionMessage.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 hidden';
+    form.insertBefore(restrictionMessage, form.firstChild);
 
     menuBtn.addEventListener('click', function () {
         mobileMenu.classList.toggle('hidden');
@@ -332,13 +337,27 @@
     const db = firebase.firestore();
     emailjs.init("XJ0w7wtg2pCTEXyAf");
 
-    const form = document.getElementById('appointment-form');
-    const formInputs = form.querySelectorAll('input, textarea, select, button[type="submit"]');
-
     function toggleFormElements(enable) {
         formInputs.forEach(element => {
             element.disabled = !enable;
         });
+    }
+
+    function checkBookingRestriction(userData) {
+        if (userData.restrictedUntil) {
+            const restrictedUntil = userData.restrictedUntil.toDate();
+            const now = new Date();
+            
+            if (restrictedUntil > now) {
+                restrictionMessage.textContent = `You cannot book an appointment until ${restrictedUntil.toLocaleDateString()}`;
+                restrictionMessage.classList.remove('hidden');
+                toggleFormElements(false);
+                return false;
+            }
+        }
+        restrictionMessage.classList.add('hidden');
+        toggleFormElements(true);
+        return true;
     }
 
     async function saveAppointmentToFirestore(appointmentData, userId) {
@@ -362,7 +381,16 @@
         if (user) {
             appointmentSection.classList.remove('hidden');
             loginMessage.classList.add('hidden');
-            toggleFormElements(true);
+            
+            // Check for booking restrictions
+            db.collection('users').doc(user.uid).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    checkBookingRestriction(userData);
+                } else {
+                    toggleFormElements(true);
+                }
+            });
         } else {
             appointmentSection.classList.add('hidden');
             loginMessage.classList.remove('hidden');
@@ -376,6 +404,13 @@
         const user = firebase.auth().currentUser;
         if (!user) {
             alert('Please login to book an appointment');
+            return;
+        }
+
+        // Check restriction status before submitting
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        const userData = userDoc.data();
+        if (!checkBookingRestriction(userData)) {
             return;
         }
 

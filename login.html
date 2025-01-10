@@ -7,6 +7,7 @@
     <!-- Link to Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.1/dist/email.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="home-page.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -318,24 +319,8 @@
         }
     });
 
-    firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        db.collection('users').doc(user.uid).get()
-            .then((doc) => {
-                const userData = doc.data();
-                const restrictedUntil = userData.restrictedUntil?.toDate();
-
-                if (restrictedUntil && restrictedUntil > new Date()) {
-                    alert(`You cannot book an appointment until ${restrictedUntil.toLocaleDateString()}.`);
-                } else {
-                    toggleFormElements(true);
-                }
-            });
-    }
-});
-
     // Function to load profile page content
-    function loadProfilePage() {
+function loadProfilePage() {
     auth.currentUser.getIdTokenResult()
         .then((idTokenResult) => {
             const isAdmin = idTokenResult.claims.admin || false;
@@ -400,30 +385,87 @@ function toggleFormElements(enable) {
     });
 }
 
-function renderAppointments(upcomingAppointments, previousAppointments) {
-    const now = new Date();
-    const upcomingHTML = upcomingAppointments.map(a => `
-        <li>
+function loadUserAppointments(user) {
+    db.collection('users').doc(user.uid).get()
+        .then((doc) => {
+            const userData = doc.data();
+            const userName = userData.name;
+
+            return db.collection('appointments')
+                .where('userId', '==', user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    const now = new Date();
+                    const upcomingAppointments = [];
+                    const previousAppointments = [];
+
+                    querySnapshot.forEach((doc) => {
+                        const appointment = doc.data();
+                        appointment.id = doc.id;
+                        const appointmentDate = new Date(appointment.date);
+
+                        if (appointmentDate >= now) {
+                            upcomingAppointments.push(appointment);
+                        } else {
+                            previousAppointments.push(appointment);
+                        }
+                    });
+
+                    // Sort appointments by date
+                    upcomingAppointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    previousAppointments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    renderAppointments(upcomingAppointments, previousAppointments, userName);
+                });
+        })
+        .catch((error) => {
+            console.error('Error fetching user data:', error);
+        });
+}
+
+// Update the renderAppointments function to include the welcome message
+function renderAppointments(upcomingAppointments, previousAppointments, userName) {
+    const formatAppointment = (a, showReschedule = false) => `
+        <li class="mb-4 p-4 bg-gray-50 rounded-lg">
             <strong>Date:</strong> ${new Date(a.date).toLocaleDateString()} <br>
             <strong>Status:</strong> ${a.status || 'Pending'} <br>
-            ${!a.rescheduled ? `
-                <button class="reschedule-btn" data-id="${a.id}">
+            ${showReschedule && !a.rescheduled ? `
+                <button class="reschedule-btn bg-blue-500 text-white px-3 py-1 rounded mt-2 mr-2" data-id="${a.id}">
                     Reschedule
                 </button>
-            ` : '<p>Reschedule used</p>'}
-            <button class="delete-btn" data-id="${a.id}">
-                Delete
-            </button>
+            ` : ''}
+            ${showReschedule ? `
+                <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded mt-2" data-id="${a.id}">
+                    Delete
+                </button>
+            ` : ''}
         </li>
-    `).join('');
-
-    authSection.innerHTML = `
-        <h3 class="text-lg font-bold text-[#800000] mb-2">Upcoming Appointments</h3>
-        <ul class="list-disc pl-5 text-gray-700">
-            ${upcomingHTML || '<li>No upcoming appointments.</li>'}
-        </ul>
     `;
 
+    const upcomingHTML = upcomingAppointments.map(a => formatAppointment(a, true)).join('');
+    const previousHTML = previousAppointments.map(a => formatAppointment(a, false)).join('');
+
+    authSection.innerHTML = `
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-[#800000]">Welcome, ${userName}!</h2>
+            <button id="signout-btn" class="bg-[#800000] text-white px-4 py-2 rounded hover:bg-[#600000] transition-colors">
+                Sign Out
+            </button>
+        </div>
+        <div class="max-w-2xl mx-auto">
+            <h3 class="text-lg font-bold text-[#800000] mb-4">Your Upcoming Appointments</h3>
+            <ul class="list-none mb-8">
+                ${upcomingHTML || '<li class="text-gray-600">No upcoming appointments.</li>'}
+            </ul>
+            
+            <h3 class="text-lg font-bold text-[#800000] mb-4">Previous Appointments</h3>
+            <ul class="list-none">
+                ${previousHTML || '<li class="text-gray-600">No previous appointments.</li>'}
+            </ul>
+        </div>
+    `;
+
+    // Add event listeners
     document.querySelectorAll('.reschedule-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => rescheduleAppointment(e));
     });
@@ -431,28 +473,69 @@ function renderAppointments(upcomingAppointments, previousAppointments) {
     document.querySelectorAll('.delete-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => deleteAppointment(e));
     });
+
+    document.getElementById('signout-btn').addEventListener('click', () => {
+        firebase.auth().signOut().then(() => {
+            window.location.href = 'login.html';
+        }).catch((error) => {
+            console.error('Error signing out:', error);
+            alert('Error signing out. Please try again.');
+        });
+    });
 }
 
 function rescheduleAppointment(event) {
     const appointmentId = event.target.dataset.id;
-    const newDate = prompt('Enter a new date (YYYY-MM-DD):');
+    
+    // Create and show the date picker dialog
+    const dialog = document.createElement('div');
+    dialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                <h3 class="text-lg font-bold mb-4">Reschedule Appointment</h3>
+                <input type="date" id="new-date" class="w-full p-2 border rounded mb-4" 
+                       min="${new Date().toISOString().split('T')[0]}">
+                <div class="flex justify-end space-x-2">
+                    <button id="cancel-reschedule" class="px-4 py-2 border rounded">
+                        Cancel
+                    </button>
+                    <button id="confirm-reschedule" class="px-4 py-2 bg-blue-500 text-white rounded">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(dialog);
 
-    if (newDate) {
-        db.collection('appointments').doc(appointmentId).update({
-            date: newDate,
-            rescheduled: true,
-        }).then(() => {
-            emailjs.send("service_x4wl48l", "template_oyp3vgd", {
-                to_email: "parkar.nikhil1406@gmail.com",
-                new_date: newDate,
+    // Add event listeners for the dialog
+    document.getElementById('cancel-reschedule').addEventListener('click', () => {
+        document.body.removeChild(dialog);
+    });
+
+    document.getElementById('confirm-reschedule').addEventListener('click', () => {
+        const newDate = document.getElementById('new-date').value;
+        if (newDate) {
+            db.collection('appointments').doc(appointmentId).update({
+                date: newDate,
+                rescheduled: true,
+            }).then(() => {
+                emailjs.send("service_x4wl48l", "template_oyp3vgd", {
+                    to_email: "parkar.nikhil1406@gmail.com",
+                    new_date: newDate,
+                });
+
+                alert('Appointment rescheduled.');
+                document.body.removeChild(dialog);
+                loadProfilePage();
+            }).catch((error) => {
+                console.error('Error rescheduling appointment:', error);
+                alert('Error rescheduling appointment. Please try again.');
             });
-
-            alert('Appointment rescheduled.');
-            loadProfilePage();
-        }).catch((error) => {
-            console.error('Error rescheduling appointment:', error);
-        });
-    }
+        } else {
+            alert('Please select a date');
+        }
+    });
 }
 
 function deleteAppointment(event) {
