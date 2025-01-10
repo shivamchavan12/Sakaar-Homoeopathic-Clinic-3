@@ -12,10 +12,80 @@
     <link rel="stylesheet" href="home-page.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
 <style>
+    /* Global Reset for body */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Ensures consistent box-sizing across all browsers */
+html {
+    box-sizing: border-box; /* Apply border-box for better layout control */
+}
+
+/* Apply border-box box-sizing for all elements */
+*, *::before, *::after {
+    box-sizing: inherit; /* Inherit box-sizing rule from html */
+}
+
+/* Floating Appointment Button */
+#appointment-icon {
+    position: fixed;
+    bottom: 5%; /* Safe margin from bottom */
+    right: 5%; /* Safe margin from right */
+    z-index: 1000; /* Ensure it is on top of all elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #800000, #FF0000); /* Gradient background */
+    color: white;
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Smooth animations */
+    width: 60px; /* Default size */
+    height: 60px;
+    font-size: 24px; /* Icon size */
+    overflow: hidden; /* Prevent content spilling */
+}
+
+/* Hover Effects */
+#appointment-icon:hover {
+    transform: scale(1.15); /* Slightly enlarge on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #660000, #CC0000); /* Darker gradient on hover */
+}
+
+/* Responsive Design for Tablets */
+@media (max-width: 768px) {
+    #appointment-icon {
+        bottom: 4%; /* Adjust bottom space for tablets */
+        right: 4%; /* Adjust right space for tablets */
+        width: 50px; /* Slightly smaller button */
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* Responsive Design for Small Devices */
+@media (max-width: 480px) {
+    #appointment-icon {
+        bottom: 3%; /* Adjust bottom space for mobile devices */
+        right: 3%; /* Adjust right space for mobile devices */
+        width: 45px; /* Smaller size for small devices */
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
 /* Keyframes for fade-in-right animation */
 @keyframes fadeInRight {
     from {
@@ -81,7 +151,7 @@
                 Contact
                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
             </a>
-            <a href="login.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+            <a id="auth-link" href="login.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
                 Login
                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
             </a>
@@ -102,7 +172,9 @@
         <a href="testimonials.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Testimonials</a>
         <a href="appointment.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Appointment</a>
         <a href="#contact" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Contact</a>
-        <a href="login.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Login</a>
+        <a id="mobile-auth-link" href="login.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">
+            Login
+        </a>
     </nav>
 </header>
 
@@ -178,12 +250,18 @@
                         <textarea id="complaints" name="complaints" rows="2" required
                             class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
                     </div>
-                    <div>
+                    <!-- <div>
                         <label for="remarks" class="block text-gray-700 font-medium mb-1">Remarks:</label>
                         <textarea id="remarks" name="remarks" rows="2" required
                             class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
+                    </div> -->
+                    <div>
+                        <label for="appt-time" class="block text-gray-700 font-medium mb-1">Appointment Time</label>
+                        <input type="time" id="appt-time" name="time" required min="09:00" max="17:00"
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                        <p class="text-sm text-gray-500 mt-1">Select a time between 9:00 AM and 5:00 PM</p>
                     </div>
-
+                    
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
@@ -293,8 +371,8 @@
         </div>
 
         <!-- Floating Icon -->
-        <a href="appointment.html" id="appointment-icon" class="fixed bottom-4 right-4 z-50 p-4 bg-maroon-600 text-white rounded-full shadow-lg hover:bg-maroon-800 transition-all duration-300 transform hover:scale-110">
-            <i class="fas fa-calendar-check text-2xl"></i> <!-- Use a calendar icon from Font Awesome -->
+        <a href="appointment.html" id="appointment-icon">
+            <i class="fas fa-calendar-check"></i>
         </a>
 
         <!-- Footer Bottom -->
@@ -309,6 +387,11 @@
     document.addEventListener('DOMContentLoaded', function () {
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
+    const form = document.getElementById('appointment-form');
+    const formInputs = form.querySelectorAll('input, textarea, select, button[type="submit"]');
+    const restrictionMessage = document.createElement('div');
+    restrictionMessage.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 hidden';
+    form.insertBefore(restrictionMessage, form.firstChild);
 
     menuBtn.addEventListener('click', function () {
         mobileMenu.classList.toggle('hidden');
@@ -332,13 +415,44 @@
     const db = firebase.firestore();
     emailjs.init("XJ0w7wtg2pCTEXyAf");
 
-    const form = document.getElementById('appointment-form');
-    const formInputs = form.querySelectorAll('input, textarea, select, button[type="submit"]');
-
     function toggleFormElements(enable) {
         formInputs.forEach(element => {
             element.disabled = !enable;
         });
+    }
+    firebase.auth().onAuthStateChanged((user) => {
+    const authLink = document.getElementById("auth-link");
+    const mobileAuthLink = document.getElementById("mobile-auth-link");
+    if (user) {
+        // User is signed in
+        authLink.textContent = "Profile";
+        authLink.href = "login.html";
+        mobileAuthLink.textContent = "Profile";
+        mobileAuthLink.href = "login.html";
+    } else {
+        // No user is signed in
+        authLink.textContent = "Login";
+        authLink.href = "login.html";
+        mobileAuthLink.textContent = "Login";
+        mobileAuthLink.href = "login.html";
+    }
+});
+
+    function checkBookingRestriction(userData) {
+        if (userData.restrictedUntil) {
+            const restrictedUntil = userData.restrictedUntil.toDate();
+            const now = new Date();
+            
+            if (restrictedUntil > now) {
+                restrictionMessage.textContent = `You cannot book an appointment until ${restrictedUntil.toLocaleDateString()}`;
+                restrictionMessage.classList.remove('hidden');
+                toggleFormElements(false);
+                return false;
+            }
+        }
+        restrictionMessage.classList.add('hidden');
+        toggleFormElements(true);
+        return true;
     }
 
     async function saveAppointmentToFirestore(appointmentData, userId) {
@@ -362,7 +476,16 @@
         if (user) {
             appointmentSection.classList.remove('hidden');
             loginMessage.classList.add('hidden');
-            toggleFormElements(true);
+            
+            // Check for booking restrictions
+            db.collection('users').doc(user.uid).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    checkBookingRestriction(userData);
+                } else {
+                    toggleFormElements(true);
+                }
+            });
         } else {
             appointmentSection.classList.add('hidden');
             loginMessage.classList.remove('hidden');
@@ -379,6 +502,13 @@
             return;
         }
 
+        // Check restriction status before submitting
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        const userData = userDoc.data();
+        if (!checkBookingRestriction(userData)) {
+            return;
+        }
+
         try {
             const formData = new FormData(this);
             const appointmentData = {};
@@ -388,8 +518,7 @@
 
             await Promise.all([
                 saveAppointmentToFirestore(appointmentData, user.uid),
-                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this),
-                emailjs.sendForm('service_x4wl48l', 'template_gcgjpsm', this)
+                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this)
             ]);
 
             alert('Appointment booked successfully!');
@@ -418,7 +547,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial check in case elements are already in view
     handleScroll();
 });
-
+    
+AOS.init({});
 </script>
 </body>
 </html>
