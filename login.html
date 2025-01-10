@@ -53,10 +53,11 @@
                     Contact
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
-                <a href="login.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a id="auth-link" href="login.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
                     Login
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
+                
             </nav>
     
             <!-- Mobile Menu Button -->
@@ -74,7 +75,9 @@
             <a href="testimonials.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Testimonials</a>
             <a href="appointment.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Appointment</a>
             <a href="#contact" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Contact</a>
-            <a href="login.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Login</a>
+            <a id="mobile-auth-link" href="login.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">
+                Login
+            </a>            
         </nav>
     </header>
 
@@ -358,6 +361,24 @@
                 alert(error.message);
             });
     });
+
+    firebase.auth().onAuthStateChanged((user) => {
+    const authLink = document.getElementById("auth-link");
+    const mobileAuthLink = document.getElementById("mobile-auth-link");
+    if (user) {
+        // User is signed in
+        authLink.textContent = "Profile";
+        authLink.href = "login.html";
+        mobileAuthLink.textContent = "Profile";
+        mobileAuthLink.href = "login.html";
+    } else {
+        // No user is signed in
+        authLink.textContent = "Login";
+        authLink.href = "login.html";
+        mobileAuthLink.textContent = "Login";
+        mobileAuthLink.href = "login.html";
+    }
+});
 
     // Check user authentication state and load the profile page if signed in
     auth.onAuthStateChanged((user) => {
