@@ -337,12 +337,12 @@
     // Function to load profile page content
     function loadProfilePage() {
     auth.currentUser.getIdTokenResult()
-        .then(() => {
+        .then((idTokenResult) => {
+            const isAdmin = idTokenResult.claims.admin || false;
             const user = auth.currentUser;
 
-            // Check if the user is an admin
-            if (user.email === "parkar.nikhil1406@gmail.com") {
-                // Admin view
+            if (isAdmin) {
+                // Admin view: Fetch all appointments
                 db.collection('appointments').orderBy('date', 'desc').get()
                     .then((querySnapshot) => {
                         let appointmentsHTML = '';
@@ -384,10 +384,20 @@
                         console.error('Error fetching appointments:', error);
                     });
             } else {
-                // User view (existing functionality)
+                // User view
                 loadUserAppointments(user);
             }
+        })
+        .catch((error) => {
+            console.error('Error fetching user token:', error);
         });
+}
+
+function toggleFormElements(enable) {
+    const formElements = document.querySelectorAll('form input, form button');
+    formElements.forEach((el) => {
+        el.disabled = !enable;
+    });
 }
 
 function renderAppointments(upcomingAppointments, previousAppointments) {
