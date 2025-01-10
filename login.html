@@ -234,8 +234,55 @@
     
 
     <script>
-        // JavaScript for toggling the mobile menu
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
+    // Add FontAwesome for eye icons
+    const fontAwesomeLink = document.createElement('link');
+    fontAwesomeLink.rel = 'stylesheet';
+    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+    document.head.appendChild(fontAwesomeLink);
+
+    // Add password toggle functionality
+    function setupPasswordToggle(passwordInputId) {
+        const passwordInput = document.getElementById(passwordInputId);
+        if (!passwordInput) return;
+
+        const parentDiv = passwordInput.parentElement;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+        
+        // Preserve the existing input's classes and attributes
+        const existingClasses = passwordInput.className;
+        parentDiv.replaceChild(wrapper, passwordInput);
+        wrapper.appendChild(passwordInput);
+        
+        const toggleButton = document.createElement('button');
+        toggleButton.type = 'button';
+        toggleButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700';
+        toggleButton.innerHTML = `<i id="${passwordInputId}-eye" class="fas fa-eye"></i>`;
+        
+        toggleButton.addEventListener('click', () => {
+            const eyeIcon = document.getElementById(`${passwordInputId}-eye`);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+        
+        wrapper.appendChild(toggleButton);
+    }
+
+    // Setup password toggles after a short delay to ensure DOM elements are ready
+    setTimeout(() => {
+        setupPasswordToggle('login-password');
+        setupPasswordToggle('signup-password');
+    }, 100);
+
+    // Rest of your existing code remains exactly the same
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const authSection = document.getElementById('auth-section');
@@ -378,6 +425,7 @@ function loadProfilePage() {
         });
 }
 
+
 function toggleFormElements(enable) {
     const formElements = document.querySelectorAll('form input, form button');
     formElements.forEach((el) => {
@@ -487,19 +535,57 @@ function renderAppointments(upcomingAppointments, previousAppointments, userName
 function rescheduleAppointment(event) {
     const appointmentId = event.target.dataset.id;
     
-    // Create and show the date picker dialog
+    // Get current date and time in local timezone
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
+
+    // Business hours constraints
+    const BUSINESS_START = '09:00';
+    const BUSINESS_END = '17:00';
+
+    // Determine min time based on current time and business hours
+    let minTime = BUSINESS_START;
+    if (today === now.toISOString().split('T')[0] && currentTime > BUSINESS_START) {
+        minTime = currentTime;
+    }
+
+    // Create and show the date-time picker dialog
     const dialog = document.createElement('div');
     dialog.innerHTML = `
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
                 <h3 class="text-lg font-bold mb-4">Reschedule Appointment</h3>
-                <input type="date" id="new-date" class="w-full p-2 border rounded mb-4" 
-                       min="${new Date().toISOString().split('T')[0]}">
-                <div class="flex justify-end space-x-2">
-                    <button id="cancel-reschedule" class="px-4 py-2 border rounded">
+                <div class="space-y-4">
+                    <div>
+                        <label for="new-date" class="block text-sm font-medium text-gray-700 mb-1">
+                            Select Date
+                        </label>
+                        <input type="date" 
+                               id="new-date" 
+                               class="w-full p-2 border rounded" 
+                               min="${today}">
+                    </div>
+                    <div>
+                        <label for="new-time" class="block text-sm font-medium text-gray-700 mb-1">
+                            Select Time (9:00 AM - 5:00 PM)
+                        </label>
+                        <input type="time" 
+                               id="new-time" 
+                               class="w-full p-2 border rounded"
+                               min="${minTime}"
+                               max="${BUSINESS_END}"
+                               step="900"> <!-- 15-minute intervals -->
+                        <p class="text-sm text-gray-500 mt-1">Available hours: 9:00 AM to 5:00 PM</p>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 mt-6">
+                    <button id="cancel-reschedule" 
+                            class="px-4 py-2 border rounded hover:bg-gray-100 transition-colors">
                         Cancel
                     </button>
-                    <button id="confirm-reschedule" class="px-4 py-2 bg-blue-500 text-white rounded">
+                    <button id="confirm-reschedule" 
+                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
                         Confirm
                     </button>
                 </div>
@@ -513,28 +599,68 @@ function rescheduleAppointment(event) {
         document.body.removeChild(dialog);
     });
 
+    // Update min/max time when date changes
+    document.getElementById('new-date').addEventListener('change', (e) => {
+        const timeInput = document.getElementById('new-time');
+        if (e.target.value === today) {
+            timeInput.min = minTime;
+        } else {
+            timeInput.min = BUSINESS_START;
+        }
+        timeInput.max = BUSINESS_END;
+        
+        // Clear time if it's outside valid range
+        if (timeInput.value && (timeInput.value < timeInput.min || timeInput.value > timeInput.max)) {
+            timeInput.value = '';
+        }
+    });
+
     document.getElementById('confirm-reschedule').addEventListener('click', () => {
         const newDate = document.getElementById('new-date').value;
-        if (newDate) {
-            db.collection('appointments').doc(appointmentId).update({
-                date: newDate,
-                rescheduled: true,
-            }).then(() => {
-                emailjs.send("service_x4wl48l", "template_oyp3vgd", {
-                    to_email: "parkar.nikhil1406@gmail.com",
-                    new_date: newDate,
-                });
+        const newTime = document.getElementById('new-time').value;
 
-                alert('Appointment rescheduled.');
-                document.body.removeChild(dialog);
-                loadProfilePage();
-            }).catch((error) => {
-                console.error('Error rescheduling appointment:', error);
-                alert('Error rescheduling appointment. Please try again.');
-            });
-        } else {
-            alert('Please select a date');
+        if (!newDate || !newTime) {
+            alert('Please select both date and time');
+            return;
         }
+
+        // Combine date and time into a timestamp
+        const newDateTime = new Date(`${newDate}T${newTime}`);
+
+        // Validate that selected datetime is in the future
+        if (newDateTime <= new Date()) {
+            alert('Please select a future date and time');
+            return;
+        }
+
+        // Validate business hours
+        const timeStr = newTime;
+        if (timeStr < BUSINESS_START || timeStr > BUSINESS_END) {
+            alert('Please select a time between 9:00 AM and 5:00 PM');
+            return;
+        }
+
+        // Update the appointment in the database
+        db.collection('appointments').doc(appointmentId).update({
+            date: newDate,
+            time: newTime,
+            timestamp: newDateTime.toISOString(),
+            rescheduled: true,
+        }).then(() => {
+            // Send email notification
+            emailjs.send("service_x4wl48l", "template_oyp3vgd", {
+                to_email: "parkar.nikhil1406@gmail.com",
+                new_date: newDate,
+                new_time: newTime,
+            });
+
+            alert('Appointment rescheduled successfully.');
+            document.body.removeChild(dialog);
+            loadProfilePage();
+        }).catch((error) => {
+            console.error('Error rescheduling appointment:', error);
+            alert('Error rescheduling appointment. Please try again.');
+        });
     });
 }
 
@@ -595,6 +721,7 @@ function deleteAppointment(event) {
     });
 });
 
+AOS.init({});
     </script>
 </body>
 </html>
