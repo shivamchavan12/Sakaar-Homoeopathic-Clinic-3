@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Sakaar Homoeopathic Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-white text-maroon-800 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-red-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between py-4 px-6">
+            <!-- Logo and Title with redirect to index.html -->
+            <a href="index.html" class="flex items-center group">
+                <img src="logo.png" alt="Clinic Logo" class="w-12 h-12 rounded-full object-cover mr-4">
+                <span class="text-3xl font-extrabold tracking-wide relative group hover:text-yellow-400 transition duration-300">
+                    Sakaar Homoeopathic Clinic
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto my-8 flex-grow">
+        <div class="bg-white p-6 shadow rounded-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-red-800">Appointment Requests</h2>
+            <div id="appointments" class="space-y-4">
+                <!-- Appointments will be dynamically populated here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 text-black text-center p-4 mt-auto">
+        <p>© Sakaar Homoeopathic Clinic</p>
+    </footer>
+
+    <script type="module">
+const firebaseConfig = {
+    apiKey: "AIzaSyBZvBHPp6bzmBaTaQBQ8JBsgTKM12dtEjM",
+    authDomain: "sakaar-homoeopathic-clinic.firebaseapp.com",
+    projectId: "sakaar-homoeopathic-clinic",
+    storageBucket: "sakaar-homoeopathic-clinic.appspot.com",
+    messagingSenderId: "1028319469",
+    appId: "1:1028319469:web:e449a194c35adaf1a884e4"
+};
+
+// Initialize Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadAppointments() {
+    const appointmentsContainer = document.getElementById('appointments');
+    appointmentsContainer.innerHTML = '<p>Loading...</p>';
+
+    const appointmentsSnapshot = await getDocs(collection(db, "appointments"));
+    appointmentsContainer.innerHTML = '';
+
+    appointmentsSnapshot.forEach(docSnapshot => {
+        const data = docSnapshot.data();
+        const appointmentElement = document.createElement('div');
+
+        appointmentElement.className = "p-4 border rounded-lg shadow-md flex justify-between items-center";
+        appointmentElement.innerHTML = `
+            <div>
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Email:</strong> ${data.email}</p>
+                <p><strong>Phone no.:</strong> ${data.phone}</p>
+                <p><strong>Date:</strong> ${data.date}</p>
+                <p><strong>Time:</strong> ${data.time}</p>
+                <p><strong>Age:</strong> ${data.age}</p>
+                <p><strong>Gender:</strong> ${data.gender}</p>
+                <p><strong>Status:</strong> <span class="font-semibold">${data.status}</span></p>
+                <p><strong>Complaints:</strong> ${data.complaints || 'N/A'}</p>
+            </div>
+            <div class="flex space-x-2">
+                <button class="accept-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Accept</button>
+                <button class="decline-btn bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Decline</button>
+            </div>
+        `;
+
+        const acceptBtn = appointmentElement.querySelector('.accept-btn');
+        const declineBtn = appointmentElement.querySelector('.decline-btn');
+
+        // Handle accept button click
+        acceptBtn.addEventListener('click', async () => {
+            const confirmAccept = confirm("Are you sure you want to accept this appointment?");
+            if (confirmAccept) {
+                await updateDoc(doc(db, "appointments", docSnapshot.id), { status: 'Accepted' });
+                const statusSpan = appointmentElement.querySelector('span');
+                statusSpan.textContent = 'Accepted';
+            }
+        });
+
+        // Handle decline button click
+        declineBtn.addEventListener('click', async () => {
+            const confirmDecline = confirm("Are you sure you want to decline this appointment?");
+            if (confirmDecline) {
+                await updateDoc(doc(db, "appointments", docSnapshot.id), { status: 'Declined' });
+                const statusSpan = appointmentElement.querySelector('span');
+                statusSpan.textContent = 'Declined';
+            }
+        });
+
+        appointmentsContainer.appendChild(appointmentElement);
+    });
+}
+
+loadAppointments();
+
+    </script>
+</body>
+</html>

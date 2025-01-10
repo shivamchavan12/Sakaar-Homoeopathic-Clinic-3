@@ -178,12 +178,18 @@
                         <textarea id="complaints" name="complaints" rows="2" required
                             class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
                     </div>
-                    <div>
+                    <!-- <div>
                         <label for="remarks" class="block text-gray-700 font-medium mb-1">Remarks:</label>
                         <textarea id="remarks" name="remarks" rows="2" required
                             class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition"></textarea>
+                    </div> -->
+                    <div>
+                        <label for="appt-time" class="block text-gray-700 font-medium mb-1">Appointment Time</label>
+                        <input type="time" id="appt-time" name="time" required min="09:00" max="17:00"
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-[#800000] outline-none transition">
+                        <p class="text-sm text-gray-500 mt-1">Select a time between 9:00 AM and 5:00 PM</p>
                     </div>
-
+                    
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
