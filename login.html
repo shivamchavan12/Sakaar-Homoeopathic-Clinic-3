@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sakaar Homoeopathic Clinic</title>
     <!-- Link to Google Fonts -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.1/dist/email.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.1/dist/email.min.js"></script> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="home-page.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -303,6 +304,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    emailjs.init("v7vjiqg_jxkhwI-wR");
 
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
@@ -663,26 +665,28 @@ function rescheduleAppointment(event) {
 
         // Update the appointment in the database
         db.collection('appointments').doc(appointmentId).update({
-            date: newDate,
-            time: newTime,
-            timestamp: newDateTime.toISOString(),
-            rescheduled: true,
-        }).then(() => {
-            // Send email notification
-            emailjs.send("service_x4wl48l", "template_oyp3vgd", {
-                to_email: "parkar.nikhil1406@gmail.com",
-                new_date: newDate,
-                new_time: newTime,
-            });
-
-            alert('Appointment rescheduled successfully.');
-            document.body.removeChild(dialog);
-            loadProfilePage();
-        }).catch((error) => {
-            console.error('Error rescheduling appointment:', error);
-            alert('Error rescheduling appointment. Please try again.');
-        });
+        date: newDate,
+        time: newTime,
+        timestamp: newDateTime.toISOString(),
+        rescheduled: true,
+    })
+    .then(() => {
+        // Send email notification with proper promise handling
+        emailjs.sendForm("service_6c19psq",  // Your service ID
+            "template_5i788ib",
+            this) // Your template ID
+    })
+    .then((response) => {
+        console.log("Email sent successfully:", response);
+        alert('Appointment rescheduled successfully.');
+        document.body.removeChild(dialog);
+        loadProfilePage();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error rescheduling appointment or sending email. Please try again.');
     });
+        });
 }
 
 function deleteAppointment(event) {
