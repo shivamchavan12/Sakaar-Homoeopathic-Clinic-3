@@ -61,15 +61,15 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to right, #0D5855, #0D7D6B); /* Gradient from #0D5855 to a lighter shade */
+    background: linear-gradient(to right, #0D5855, #0D7D6B); /* Gradient */
     color: white;
     border-radius: 50%; /* Circular shape */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease; /* Smooth animations */
+    transition: transform 0.3s ease, background 0.3s ease; /* Smooth animations */
     width: 60px; /* Default size */
     height: 60px;
     font-size: 24px; /* Icon size */
-    overflow: hidden; /* Prevent content spilling */
+    cursor: pointer;
 }
 
 /* Hover Effects */
@@ -82,9 +82,9 @@ html {
 /* Responsive Design for Tablets */
 @media (max-width: 768px) {
     #appointment-icon {
-        bottom: 4%; /* Adjust bottom space for tablets */
-        right: 4%; /* Adjust right space for tablets */
-        width: 50px; /* Slightly smaller button */
+        bottom: 4%;
+        right: 4%;
+        width: 50px; /* Smaller button size */
         height: 50px;
         font-size: 20px;
     }
@@ -93,13 +93,14 @@ html {
 /* Responsive Design for Small Devices */
 @media (max-width: 480px) {
     #appointment-icon {
-        bottom: 3%; /* Adjust bottom space for mobile devices */
-        right: 3%; /* Adjust right space for mobile devices */
-        width: 45px; /* Smaller size for small devices */
+        bottom: 3%;
+        right: 3%;
+        width: 45px; /* Smaller button size */
         height: 45px;
         font-size: 18px;
     }
 }
+
 
 </style>
 <body class="text-maroon-800 flex flex-col min-h-screen">
@@ -109,7 +110,7 @@ html {
             <!-- Logo and Title with redirect to index.html -->
             <a href="index.html" class="flex items-center group">
                 <img src="logo2.jpg" alt="Clinic Logo" class="w-14 h-14 rounded-full object-cover mr-4"> 
-                <span class="text-3xl tracking-widest p-1 relative group hover:text-[#F1E34A] transition duration-300">
+                <span class="text-3xl font-bold tracking-widest p-1 relative group hover:text-[#F1E34A] transition duration-300">
                     SAKAAR HOMOEOPATHY
                     <!-- Underline span -->
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
@@ -154,12 +155,12 @@ html {
     
         <!-- Mobile Navigation Menu -->
         <nav id="mobile-menu" class="hidden lg:hidden bg-[#0D5855] text-white p-4 space-y-4 shadow-lg">
-            <a href="index.html" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">Home</a>
-            <a href="awards.html" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">Awards</a>
-            <a href="testimonials.html" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">Testimonials</a>
-            <a href="appointment.html" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">Appointment</a>
-            <a href="#contact" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">Contact</a>
-            <a id="mobile-auth-link" href="login.html" class="block  text-lg px-4 py-2 hover: hover:text-red-600 rounded-lg transition duration-300">
+            <a href="index.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Home</a>
+            <a href="awards.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Awards</a>
+            <a href="testimonials.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Testimonials</a>
+            <a href="appointment.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Appointment</a>
+            <a href="#contact" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Contact</a>
+            <a id="mobile-auth-link" href="login.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">
                 Login
             </a>
         </nav>
@@ -172,74 +173,85 @@ html {
             Welcome to Sakaar Homoeopathic Clinic
         </h1>
         <p style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"class="text-gray-700 leading-7 text-lg text-center" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="300">
-            A Practo certified clinic with professional infrastructure, including a well-equipped homoeopathic pharmacy, dedicated to enhancing the quality of patients' lives...
-        </p>
-        <p style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" class="mt-4 text-gray-700 leading-7 text-lg text-center" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="500">
-            In response to the challenges posed by the pandemic, we also offer 'Online Medical Consultation'...
+            Welcome to Sakaar Homoeopathy, where health meets harmony through the power of natural healing! We provide personalized care for a variety of health concerns, focusing on holistic wellness by addressing root causes rather than just symptoms. We conduct detailed assessments of health history, lifestyle, and overall personality to create customized treatment plans tailored to each individual’s unique constitution. Our remedies are natural, safe, and gentle, suitable for all ages, including children, pregnant women, and the elderly. At Sakaar Homoeopathy, we aim to restore balance to mind, body, and soul, ensuring a healthier and harmonious life for you.
         </p>
     </section>
     
 
-    <main class="container mx-auto my-8 p-6 bg-gradient-to-r from-white to-gray-50 rounded-lg shadow-lg flex-grow" data-aos="fade-up" data-aos-duration="1000">
+    <main style="font-family: Cambria,serif;" class="container mx-auto my-8 p-3 bg-gradient-to-r from-white to-gray-50 rounded-lg shadow-lg flex-grow" data-aos="fade-up" data-aos-duration="1000">
     <!-- Flex container for video and gallery -->
-    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-
-        <!-- Video Section (Left) -->
-        <div class="flex justify-center w-full md:w-1/2 px-4">
-            <iframe class="w-full h-40 md:h-48 rounded-lg shadow-lg"
-                    src="https://www.youtube.com/embed/mr_r1LwVRs8"
-                    title="About Homeopathy"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-            </iframe>
+    <div class="flex flex-col lg:flex-row items-center justify-center space-y-8 lg:space-y-0 lg:space-x-8 py-12 bg-gray-50">
+        <!-- Video Section -->
+        <div class="w-full lg:w-1/2 px-4">
+            <div class="relative rounded-lg shadow-lg bg-white overflow-hidden">
+                <iframe 
+                    src="https://www.youtube.com/embed/mr_r1LwVRs8" 
+                    title="About Homeopathy" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen
+                    class="w-full" style="height: 300px;">
+                </iframe>
+            </div>
+            <p class="mt-4 text-center text-lg font-medium text-gray-700">
+                Learn About Homeopathy
+            </p>
         </div>
-
-        <!-- Photo Gallery Section (Right) -->
-        <div class="relative w-full md:w-1/2 px-4">
-            <!-- Slider Wrapper -->
-            <div class="relative overflow-hidden max-w-full mx-auto">
-                <div class="flex transition-transform duration-700 ease-in-out" id="slider">
-                    <!-- Image 1 -->
-                    <div class="relative w-full flex-shrink-0">
-                        <img src="clinic1.jpg" alt="Clinic Image 1" class="w-full h-60 object-contain rounded-lg shadow-lg">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-                            <p class="text-white font-semibold">Clinic Image 1</p>
+        
+        
+    
+        <!-- Photo Gallery Section -->
+        <div class="w-full lg:w-1/2 px-4">
+            <div class="relative rounded-lg shadow-lg bg-white overflow-hidden">
+                <!-- Slider Wrapper -->
+                <div class="relative overflow-hidden group">
+                    <div class="flex transition-transform duration-700 ease-in-out" id="slider">
+                        <!-- Image 1 -->
+                        <div class="relative w-full flex-shrink-0">
+                            <img src="clinic1.jpg" alt="Clinic Image 1" class="w-full h-72 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <p class="text-white font-semibold">Clinic Image 1</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Image 2 -->
-                    <div class="relative w-full flex-shrink-0">
-                        <img src="clinic2.jpg" alt="Clinic Image 2" class="w-full h-60 object-contain rounded-lg shadow-lg">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-                            <p class="text-white font-semibold">Clinic Image 2</p>
+                        <!-- Image 2 -->
+                        <div class="relative w-full flex-shrink-0">
+                            <img src="clinic2.jpg" alt="Clinic Image 2" class="w-full h-72 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <p class="text-white font-semibold">Clinic Image 2</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Image 3 -->
-                    <div class="relative w-full flex-shrink-0">
-                        <img src="clinic3.jpg" alt="Clinic Image 3" class="w-full h-60 object-contain rounded-lg shadow-lg">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-                            <p class="text-white font-semibold">Clinic Image 3</p>
+                        <!-- Image 3 -->
+                        <div class="relative w-full flex-shrink-0">
+                            <img src="clinic3.jpg" alt="Clinic Image 3" class="w-full h-72 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <p class="text-white font-semibold">Clinic Image 3</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Image 4 -->
-                    <div class="relative w-full flex-shrink-0">
-                        <img src="clinic4.jpg" alt="Clinic Image 4" class="w-full h-60 object-contain rounded-lg shadow-lg">
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
-                            <p class="text-white font-semibold">Clinic Image 4</p>
+                        <!-- Image 4 -->
+                        <div class="relative w-full flex-shrink-0">
+                            <img src="clinic4.jpg" alt="Clinic Image 4" class="w-full h-72 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <p class="text-white font-semibold">Clinic Image 4</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-
+    
                 <!-- Navigation Buttons -->
-                <button onclick="prevSlide()" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl bg-transparent border-2 border-white p-2 rounded-full hover:bg-[#b30000] hover:text-white">
+                <button onclick="prevSlide()" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl bg-gray-800 bg-opacity-50 p-3 rounded-full hover:bg-[#0D5855] transition">
                     &lt;
                 </button>
-                <button onclick="nextSlide()" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl bg-transparent border-2 border-white p-2 rounded-full hover:bg-[#b30000] hover:text-white">
+                <button onclick="nextSlide()" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl bg-gray-800 bg-opacity-50 p-3 rounded-full hover:bg-[#0D5855] transition">
                     &gt;
                 </button>
             </div>
+            <p class="mt-4 text-center text-lg font-medium text-gray-700">
+                Explore Our Clinic
+            </p>
         </div>
     </div>
+  
+    
 </main>
 
     <!-- Doctor's Information Section -->
@@ -247,7 +259,7 @@ html {
         <!-- Doctor's Name and Qualifications -->
         <h2 class="text-3xl  text-center md:text-left" data-aos="fade-down" data-aos-duration="1000">
             <span style="font-family: 'Quicksand', sans-serif;" class="text-[#0D5855] font-bold underline-effect">Dr. Sarika Vaidya</span>
-            <span class="text-lg text-gray-600 italic block mt-2">M.D. Homoeopathy</span>
+            <span class="text-lg text-gray-600 italic block mt-2">M.D. Homoeopathy | Director-Sakaar Homoeopathy</span>
         </h2>
         
         <div class="flex flex-col md:flex-row items-center mt-6 gap-8 md:gap-12" data-aos="fade-up" data-aos-duration="1200">
@@ -260,13 +272,12 @@ html {
             <div class="md:flex-1" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="400">
                 <p class="mt-3 text-gray-600 text-lg"><strong>Profile:</strong></p>
                 <ul class="mt-3 text-gray-600 list-disc ml-5">
-                    <li>Senior Homoeopathic Consultant, practicing classical homoeopathy successfully for over 20 years.</li>
-                    <li>A diligent Homoeopath with a remarkable academic record and strong inter-personal communication and counseling skills.</li>
-                    <li>Specialist in diagnosing diseases carefully, understanding human behavior, and making prescriptions 'perfect' for a rapid and gentle cure.</li>
-                    <li>Associate of several renowned Medical and Homoeopathic institutions in India.</li>
+                    <li>Dr. Sarika Vaidya, a dedicated and passionate Homoeopath with 25 years of experience in the field of Homoeopathy, has been guiding patients towards a life of vibrant health and inner peace through the gentle art of Homoeopathy!</li>
+                    <li>A specialist in diagnosing diseases carefully, understanding human behaviour, and making prescriptions 'perfect' for a rapid and gentle cure.</li>
+                    <li>Dr. Sarika is also a zealous teacher, sharing knowledge and expertise with aspiring buddy homoeopaths! Homoeopathic medical college experience of 12 yrs.</li>
+                    <li>Dr. Sarika completed post graduate diploma in Child and Adolescent Psychology and counselling and their additional training provides a deeper understanding of emotional and developmental needs of a child and identify the root cause of a child’s health issues and empower them to lead a healthy and happy life!</li>
+                    <li>Dr. Sarika is also an associate of several renowned Medical and Homoeopathic institutions in India.</li>
                 </ul>
-                
-                <p class="mt-4 text-gray-700 leading-8"><strong>Additional Information:</strong> For online consultation, please <a href="appointment.html" class="text-maroon-600 hover:text-maroon-700">click here</a>.</p>
             </div>
         </div>
     </section>
@@ -277,7 +288,10 @@ html {
         Message from the Director
     </h2>
     <blockquote style="font-family: Cambria,serif;" class="mt-6 text-[#333] italic border-l-4 border-[#800000] pl-6 text-lg" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="400">
-        “Entrepreneurship has experienced an upswing in the number of women willing to be a part of it. However, in this dynamic journey, they are somehow compelled to neglect their health. These days, women seem to adopt a role opposite to their nature, thinking it is the only possible way to be at par with men, but they must be aware of the fact that their elegant yet passionate feminist character is in its way the best path to success. It should be treated as a blessing to be a ‘woman’ and every day should be owed to celebrate feminism.”
+        <p>Welcome to Sakaar Homoeopathy, where we embrace the power of nature to heal! As a dedicated homoeopath, I am committed to providing personalized care that addresses each individual’s unique health challenges. Homoeopathy is a gentle yet profound system of medicine that works with the body’s natural healing abilities.</p>
+        <p>At Sakaar Homoeopathy, we take a holistic approach, considering not just physical symptoms but also the emotional, mental, and spiritual aspects of well-being. Our nurturing environment fosters trust and confidence as we guide you on your journey to better health. Let us support you in achieving a healthier, happier, and harmonized life!</p>
+        <p><br>~ Dr. Sarika Vaidya</p>
+        <p class="ml-3">M.D.Homoeopath</p>
     </blockquote>
 </section>
 
@@ -290,24 +304,28 @@ html {
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
             <!-- Segment 1 -->
-            <div class="section-card bg-white rounded-lg shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">Homoeopathy for All</h3>
-                <p class="text-[#333]">Homoeopathy is a holistic approach to healing, treating the body, mind, and spirit. It addresses the root cause of ailments and promotes natural healing. Dr. Sarika Vaidya's clinic offers personalized treatment plans for all ages.</p>
+            <div class="section-card bg-white rounded-xl shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">HOMOEOPATHY FOR ALL</h3>
+                <p class="text-[#333]">All diseases and All age groups:</p><br>
+                <p class="text-[#333]">Experience the gentle and effective touch of Homoeopathy for the entire family. From minor ailments to chronic conditions, to incurable conditions, we offer Homoeopathic solutions for every stage of life, considering the Sick Individual as a whole, thus providing personalized safe and permanent cure from root cause for the whole family.</p>
             </div>
             <!-- Segment 2 -->
-            <div class="section-card bg-white rounded-lg shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
-                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">Thyroid Specialist</h3>
-                <p class="text-[#333]">Dr. Sarika Vaidya provides expert care for thyroid-related issues, blending homoeopathy and modern approaches for hormonal balance and improved health.</p>
+            <div class="section-card bg-white rounded-xl shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">THYROID DISORDERS</h3>
+                <p class="text-[#333]">The Thyroid gland is located in the neck, plays a crucial role in regulating metabolism, growth, and development. When the thyroid gland produces either too much (Hyperthyroidism) or too little thyroid hormone (Hypothyroidism), it can lead to various health issues.</p>
+                <p class="text-[#333]">Sakaar homoeopathy offers a promising approach for managing underlying hormonal imbalances by stimulating the body’s natural healing abilities, addresses the root cause of the imbalance, improving overall thyroid function by reducing symptoms associated with it.</p>
             </div>
             <!-- Segment 3 -->
-            <div class="section-card bg-white rounded-lg shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
-                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">Child & Adolescent Psychology</h3>
-                <p class="text-[#333]">Helping young individuals cope with emotional and behavioral challenges, Dr. Sarika Vaidya offers homoeopathic treatments and counseling for anxiety, depression, and more.</p>
+            <div class="section-card bg-white rounded-xl shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">CHILD AND ADOLESCENT PSYCHOLOGY</h3>
+                <p class="text-[#333]">Nurturing young minds with Homoeopathic support!</p>
+                <p class="text-[#333]">We address a range of Emotional and Behavioural Challenges, Anger issues, Violence, Anxieties, Depression, Hyperactivity, Restlessness, poor Self-confidence, low Self-esteem in children and adolescents, promoting healthy emotional development and well-being.</p>
             </div>
             <!-- Segment 4 -->
-            <div class="section-card bg-white rounded-lg shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
-                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">Counseling</h3>
-                <p class="text-[#333]">Dr. Sarika Vaidya offers compassionate counseling for a wide range of concerns, creating a safe space for emotional growth and healing.</p>
+            <div class="section-card bg-white rounded-xl shadow-lg p-6 border-l-8 border-[#800000] hover:transform hover:scale-105 hover:translate-y-[-5px] hover:shadow-xl transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
+                <h3 class="text-xl text-[#0D5855] mb-4 hover:text-[#b30000]">COUNSELING</h3>
+                <p class="text-[#333]">Find Clarity and Direction through our Homoeopathic Counselling Services.</p>
+                <p class="text-[#333]">Here, a safe and supportive space is provided to explore patients concerns, develop coping mechanisms and empowering emotional health to achieve personal goals!</p>
             </div>
         </div>
     </section>
@@ -315,63 +333,20 @@ html {
 
 
 
-    <!-- Additional Treatment Options -->
-    <section id="treatments" style="font-family: Cambria,serif;" class="mt-12 fade-in" data-aos="fade-up" data-aos-duration="1200">
-        <h2 style="font-family: 'Quicksand', sans-serif;" class="text-3xl font-bold text-[#0D5855] mb-8 text-center hover:text-[#b30000] transition-all duration-300" data-aos="fade-up" data-aos-duration="1000">
-            Our Treatment Specializations
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            <!-- Treatment 1: Hair Fall Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
-                <img src="hairfall.jpg" alt="Hair Fall Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Hair Fall Treatment</h3>
-                <p class="text-[#333]">Hopeless by hair loss? Get the best treatment. Homeopathy is the right solution for your hair problems.</p>
+    <!-- Additional Treatment Options --> 
+    <main> 
+        <section id="treatments" style="font-family: Cambria,serif;" class="fade-in w-full py-12" data-aos="fade-up" data-aos-duration="1200">
+            <div class="container mx-auto px-4 md:px-8">
+                <h2 style="font-family: 'Quicksand', sans-serif;" class="text-4xl font-extrabold text-[#0D5855] mb-12 text-center hover:text-[#b30000] transition-all duration-300" data-aos="fade-up" data-aos-duration="1000">
+                    Our Treatment Specializations
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <!-- Dynamically Generated Treatment Cards -->
+                </div>
             </div>
-            <!-- Treatment 2: Skin Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-                <img src="skin.png" alt="Skin Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Skin Treatment</h3>
-                <p class="text-[#333]">Don’t take your skin for granted! Homeopathy believes in treating the person as a whole, not just the infection.</p>
-            </div>
-            <!-- Treatment 3: PCOS Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
-                <img src="psco.png" alt="PCOS Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">PCOS Treatment</h3>
-                <p class="text-[#333]">Homeopathy treatment for PCOS without any side effects.</p>
-            </div>
-            <!-- Treatment 4: Thyroid Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
-                <img src="thyroid.png" alt="Thyroid Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Thyroid Treatment</h3>
-                <p class="text-[#333]">Treat it immediately before the small thyroid gland leads to big problems.</p>
-            </div>
-            <!-- Treatment 5: Migraine Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
-                <img src="migraine.png" alt="Migraine Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Migraine Treatment</h3>
-                <p class="text-[#333]">Reduce the frequency and intensity of subsequent migraine attacks by taking the best homeopathy treatment.</p>
-            </div>
-            <!-- Treatment 6: Psoriasis Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
-                <img src="skin-disease.png" alt="Psoriasis Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Psoriasis Treatment</h3>
-                <p class="text-[#333]">Homeopathy is the first treatment option for psoriasis. Start your journey towards healing this disease.</p>
-            </div>
-            <!-- Additional Treatment 7: Arthritis Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="700">
-                <img src="arthritis.png" alt="Arthritis Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Arthritis Treatment</h3>
-                <p class="text-[#333]">Alleviate the pain and discomfort caused by arthritis with effective homeopathic remedies that target the root cause of the condition.</p>
-            </div>
-            <!-- Additional Treatment 8: Digestive Health Treatment -->
-            <div class="treatment-card bg-white rounded-lg shadow-lg p-6 text-center hover:transform hover:translate-y-[-5px] hover:shadow-xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
-                <img src="digestive-system.png" alt="Digestive Health Treatment" class="w-16 h-16 mx-auto mb-4 transition-transform duration-300 transform hover:scale-110">
-                <h3 class="text-lg text-[#800000] mb-2 hover:text-[#b30000] transition-all duration-300">Digestive Health Treatment</h3>
-                <p class="text-[#333]">Homeopathy offers natural and safe solutions to digestive issues such as bloating, indigestion, and irritable bowel syndrome (IBS).</p>
-            </div>
-        </div>
-    </section>
-</main>    
+        </section>
+    </main>
+</main>
 
 <footer class="bg-gray-200 text-gray-800 py-8 relative overflow-hidden">
     <section id="contact">
@@ -388,41 +363,45 @@ html {
                 </p>
                 <p class="mb-2 flex items-center justify-center text-gray-600">
                     <i class="fas fa-envelope text-gray-600 mr-2"></i>
-                    <span>dr.sarikavaidya@example.com</span>
+                    <span>sakaarhomoeopathy@gmail.com</span>
                 </p>
                 <p class="mb-2 flex items-center justify-center text-gray-600">
                     <i class="fas fa-phone text-gray-600 mr-2"></i>
-                    <span>+1 234 567 890</span>
+                    <span>+91 9762079771</span>
+                </p>
+                <p class="mb-2 flex items-center justify-center text-gray-600">
+                    <i class="fas fa-phone text-gray-600 mr-2"></i>
+                    <span>+91 9422350717</span>
                 </p>
             </div>
 
             <!-- Social Media Links -->
             <div class="text-center group hover:text-gray-700 transition-all duration-300">
-                <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block group-hover:text-maroon-700">
-                    Follow Us
-                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-bottom-left"></span>
-                </h3>
-                <ul class="space-y-3">
-                    <li>
-                        <a href="https://facebook.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                            <i class="fab fa-facebook-f mr-2"></i>
-                            <span>Facebook</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://twitter.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                            <i class="fab fa-twitter mr-2"></i>
-                            <span>Twitter</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                            <i class="fab fa-instagram mr-2"></i>
-                            <span>Instagram</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block group-hover:text-maroon-700">
+        Follow Us
+        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-bottom-left"></span>
+    </h3>
+    <ul class="space-y-3">
+        <li>
+            <a href="https://youtube.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                <i class="fab fa-youtube mr-2"></i>
+                <span>YouTube</span>
+            </a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/in/dr-sarika-vaidya/" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                <i class="fab fa-linkedin mr-2"></i>
+                <span>LinkedIn</span>
+            </a>
+        </li>
+        <li>
+            <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                <i class="fab fa-instagram mr-2"></i>
+                <span>Instagram</span>
+            </a>
+        </li>
+    </ul>
+</div>
 
             <!-- Our Location -->
             <div class="text-center group hover:text-gray-700 transition-all duration-300">
@@ -431,13 +410,14 @@ html {
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
                 </h3>
                 <p class="mb-2 text-gray-600">
-                    <span class="flex items-center">
+                    <span class="flex items-center justify-center">
                         <i class="fas fa-map-marker-alt text-gray-600 mr-2"></i>
-                        <strong>Address:</strong> 123 Wellness Street, Cityname, Country
+                        <strong>Address:</strong>
                     </span>
+                    <p class="text-center">Office no. 401, Wisteriaa Fortune, Hinjawadi Marunji Rd, opp. to Hotel Silver Spoon, Wakad, Pune, Maharashtra 411057</p>
                 </p>
                 <a href="https://www.google.com/maps/dir/?api=1&origin=&destination=Sakaar+Homoeopathy,+18.6034308,73.7430896" 
-                    target="_blank" class="text-gray-800 underline-effect transition-all duration-300 group-hover:text-maroon-700"  style="margin-top:25px;">
+                    target="_blank" class="text-gray-800 underline-effect transition-all duration-300 group-hover:text-maroon-700"  style="margin-top:15px;">
                     View On Map
                 </a>
             </div>
@@ -461,10 +441,7 @@ html {
         <!-- Floating Icon -->
         <a href="appointment.html" id="appointment-icon">
             <i class="fas fa-calendar-check"></i>
-        </a>
-        
-
-
+       </a>
      
         <!-- Footer Bottom -->
         <div class="mt-8 text-center text-sm border-t border-gray-500 pt-4 group hover:text-maroon-700 transition-all duration-300">
@@ -526,53 +503,110 @@ const firebaseConfig = {
 });
 
 
-        let currentIndex = 0;
-    const slides = document.querySelectorAll('#slider > div');
-    const totalSlides = slides.length;
+let currentIndex = 0;
+const slides = document.querySelectorAll('#slider > div');
+const totalSlides = slides.length;
 
-    // Show the current slide
-    function showSlide(index) {
-        // Loop back to the first slide if we're at the last one
-        if (index >= totalSlides) {
-            currentIndex = 0;
-        } 
-        // Loop to the last slide if we're at the first one
-        else if (index < 0) {
-            currentIndex = totalSlides - 1;
-        } 
-        else {
-            currentIndex = index;
-        }
-        
-        // Adjust the slide position
-        const slideWidth = slides[0].offsetWidth;
-        document.getElementById('slider').style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+// Show the current slide
+function showSlide(index) {
+    // Loop back to the first slide if we're at the last one
+    if (index >= totalSlides) {
+        currentIndex = 0;
+    } 
+    // Loop to the last slide if we're at the first one
+    else if (index < 0) {
+        currentIndex = totalSlides - 1;
+    } 
+    else {
+        currentIndex = index;
     }
+    
+    // Adjust the slide position
+    const slideWidth = slides[0].offsetWidth;
+    document.getElementById('slider').style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+}
 
-    // Move to the previous slide
-    function prevSlide() {
-        showSlide(currentIndex - 1);
-    }
+// Move to the previous slide
+function prevSlide() {
+    showSlide(currentIndex - 1);
+}
 
-    // Move to the next slide
-    function nextSlide() {
-        showSlide(currentIndex + 1);
-    }
+// Move to the next slide
+function nextSlide() {
+    showSlide(currentIndex + 1);
+}
 
-    // Initial setup: show the first slide
-    window.onload = function() {
-        showSlide(currentIndex);
-    };
+// Initial setup: show the first slide when the page is loaded
+window.onload = function() {
+    showSlide(currentIndex);
+};
 
-    // Optionally, you can add auto-sliding functionality:
-    setInterval(() => {
-        nextSlide();
-    }, 2000);
-    document.getElementById('appointment-icon').addEventListener('click', function(e) {
+// Optionally, you can add auto-sliding functionality
+setInterval(() => {
+    nextSlide();
+}, 3000); // Adjust the time to suit your needs (currently set to 3 seconds)
+
+// Add click event listener for the appointment button
+document.getElementById('appointment-icon').addEventListener('click', function(e) {
     e.preventDefault(); // Prevent the default behavior (e.g., if it's a link)
     window.location.href = 'appointment.html'; // Redirect to the appointment page
 });
+
 AOS.init({});
+
+        const treatments = [
+            {
+                title: "Hair Fall Treatment",
+                img: "hairfall.jpg",
+                description: "Hopeless by hair loss? Get the best treatment. Homoeopathy is the right solution for your hair problems.",
+            },
+            {
+                title: "Skin Treatment",
+                img: "skin.png",
+                description: "Don’t take your skin for granted! Homoeopathy believes in treating the person as a whole, not just the infection.",
+            },
+            {
+                title: "PCOS Treatment",
+                img: "psco.png",
+                description: "Homoeopathy treatment for PCOS without any side effects.",
+            },
+            {
+                title: "Thyroid Treatment",
+                img: "thyroid.png",
+                description: "Treat it immediately before the small thyroid gland leads to big problems.",
+            },
+            {
+                title: "Migraine Treatment",
+                img: "migraine.png",
+                description: "Reduce the frequency and intensity of subsequent migraine attacks by taking the best homoeopathy treatment.",
+            },
+            {
+                title: "Psoriasis Treatment",
+                img: "skin-disease.png",
+                description: "Homoeopathy is the first treatment option for psoriasis. Start your journey towards healing this disease.",
+            },
+            {
+                title: "Arthritis Treatment",
+                img: "arthritis.png",
+                description: "Alleviate the pain and discomfort caused by arthritis with effective homeopathic remedies.",
+            },
+            {
+                title: "Digestive Health Treatment",
+                img: "digestive-system.png",
+                description: "Homoeopathy offers natural and safe solutions to digestive issues such as bloating, indigestion, and IBS.",
+            },
+        ];
+    
+        const treatmentContainer = document.querySelector("#treatments .grid");
+        treatments.forEach((treatment, index) => {
+            treatmentContainer.innerHTML += `
+                <div class="treatment-card bg-gradient-to-r from-white to-[#f0f0f0] rounded-lg shadow-lg p-6 text-center hover:transform hover:-translate-y-3 hover:shadow-2xl hover:scale-105 transition-all duration-500" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="${index * 100}">
+                    <img src="${treatment.img}" alt="${treatment.title}" class="w-16 h-16 mx-auto mb-6 transition-transform duration-300 transform hover:scale-110">
+                    <h3 class="text-xl font-bold text-[#800000] mb-4 hover:text-[#b30000] transition-all duration-300">${treatment.title}</h3>
+                    <p class="text-[#555] leading-relaxed">${treatment.description}</p>
+                </div>`;
+        });
+       
     </script>
 </body>
 </html>
