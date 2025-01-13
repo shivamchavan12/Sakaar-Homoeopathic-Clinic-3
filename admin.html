@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Sakaar Homoeopathic Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+</head>
+<style>
+    /* Positioning the button fixed on the screen */
+    .floating-btn {
+        position: fixed; /* Fixes the button's position relative to the viewport */
+        bottom: 20px; /* 20px from the bottom of the screen */
+        right: 20px; /* 20px from the right of the screen */
+        z-index: 1000; /* Ensures the button stays above other content */
+        transition: all 0.3s ease;
+        display: flex; /* Align items in a row */
+        align-items: center; /* Center the icon and text vertically */
+    }
+
+    /* Adjustments for mobile screens */
+    @media screen and (max-width: 640px) {
+        .floating-btn {
+            right: 10px; /* Slightly smaller distance from the right on mobile */
+            bottom: 15px; /* Adjusts the bottom space for mobile */
+            padding: 10px 14px; /* Adjusts the padding for mobile */
+            font-size: 14px; /* Smaller font size for mobile screens */
+        }
+
+        /* Adjust the icon size on mobile */
+        .floating-btn i {
+            font-size: 16px;
+        }
+    }
+
+    /* Hover effect to slightly increase the button size */
+    .floating-btn:hover {
+        transform: scale(1.05); /* Slightly increases the size of the button */
+    }
+</style>
+<body class="bg-white text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-red-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 flex-wrap">
+            <a href="index.html" class="flex items-center group">
+                <img src="logo.png" alt="Clinic Logo" class="w-12 h-12 rounded-full object-cover mr-4">
+                <span class="text-2xl sm:text-3xl font-extrabold tracking-wide relative group-hover:text-yellow-400 transition duration-300">
+                    Sakaar Homoeopathic Clinic
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </span>
+            </a>
+    
+            <!-- Navigation Menu -->
+            <nav class="hidden lg:flex space-x-6 text-lg">
+                <a href="#upcomingappointments-section" class="hover:text-yellow-400 transition duration-300">Upcoming Appointments</a>
+                <a href="#pastappointments-section" class="hover:text-yellow-400 transition duration-300">Past Appointments</a>
+                <a href="#Statistics" class="hover:text-yellow-400 transition duration-300">Statistics</a>
+            </nav>
+    
+            <!-- Hamburger Menu (for mobile) -->
+            <div class="lg:hidden">
+                <button id="menuButton" class="text-white focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobileMenu" class="lg:hidden bg-red-800 text-white py-4 px-6 space-y-4 absolute top-0 left-0 w-full z-40 hidden">
+            <a href="#upcomingappointments-section" class="block text-lg hover:text-yellow-400">Upcoming Appointments</a>
+            <a href="#pastappointments-section" class="block text-lg hover:text-yellow-400">Past Appointments</a>
+            <a href="#Statistics" class="block text-lg hover:text-yellow-400">Statistics</a>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="container mx-auto my-8 px-4 sm:px-6 lg:px-8 flex-grow">
+
+        <div id="statisticsDashboard"></div>
+
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex-1">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search appointments" 
+                    class="py-2 px-4 border border-gray-300 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                />
+            </div>
+            <button 
+                id="searchBtn" 
+                class="ml-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                Search
+            </button>
+        </div>
+
+        <div class="bg-white p-6 shadow rounded-lg">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-red-800">Appointment Requests</h2>
+    
+            <!-- Date-Segmented Appointments Table -->
+            <div id="appointmentList" class="space-y-6">
+                <!-- Table will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+    
+    
+    <!-- Button to trigger modal -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-end mb-4">
+        <button id="updateOfflineAppointmentsBtn" class="floating-btn bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition flex items-center">
+            <i class="fas fa-calendar-plus mr-2"></i> <!-- Add your desired icon here -->
+            Enter Offline Appointments
+        </button>
+    </div>
+
+    <!-- Modal for entering appointment details -->
+    <div id="appointmentModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden z-50">
+        <div class="relative bg-white p-6 rounded-lg shadow-lg w-11/12 sm:w-3/4 lg:w-1/2 xl:w-1/3 max-h-full overflow-y-auto">
+            <h3 class="text-lg sm:text-2xl mb-4 text-center text-gray-800">Enter Appointment Details</h3>
+    
+            <form id="appointmentForm" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium">Name:</label>
+                    <input type="text" id="name" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="email" class="block text-sm font-medium">Email:</label>
+                    <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="phone" class="block text-sm font-medium">Phone:</label>
+                    <input type="text" id="phone" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="date" class="block text-sm font-medium">Date:</label>
+                    <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="time" class="block text-sm font-medium">Time:</label>
+                    <input type="time" id="time" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="age" class="block text-sm font-medium">Age:</label>
+                    <input type="number" id="age" class="w-full p-2 border border-gray-300 rounded" required>
+                </div>
+    
+                <div>
+                    <label for="gender" class="block text-sm font-medium">Gender:</label>
+                    <select id="gender" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+    
+                <div>
+                    <label for="complaints" class="block text-sm font-medium">Complaints:</label>
+                    <textarea id="complaints" class="w-full p-2 border border-gray-300 rounded" rows="3"></textarea>
+                </div>
+    
+                <div class="flex justify-end space-x-4">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Submit</button>
+                    <button type="button" id="closeModalBtn" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Section for displaying statistics -->
+<div id="Statistics" class="mb-8 py-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg shadow-lg flex justify-center">
+    <!-- Create a container with max-width to ensure it doesn't stretch too far -->
+    <div class="max-w-screen-xl w-full px-4">
+        <h3 class="text-3xl font-semibold text-center text-white mb-6">Appointment Statistics</h3>
+
+        <!-- Responsive Grid Layout -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+            <!-- Total Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Total Appointments</h4>
+                <p id="totalAppointments" class="text-3xl font-semibold text-blue-600 mt-2">0</p>
+            </div>
+
+            <!-- Accepted Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Accepted Appointments</h4>
+                <p id="acceptedAppointments" class="text-3xl font-semibold text-green-600 mt-2">0</p>
+            </div>
+
+            <!-- Declined Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Declined Appointments</h4>
+                <p id="declinedAppointments" class="text-3xl font-semibold text-red-600 mt-2">0</p>
+            </div>
+
+            <!-- Offline Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Offile Appointments</h4>
+                <p id="offlineAppointments" class="text-3xl font-semibold text-yellow-600 mt-2">0</p>
+            </div>
+
+            <!-- Pending Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Pending Appointments</h4>
+                <p id="pendingAppointments" class="text-3xl font-semibold text-yellow-600 mt-2">0</p>
+            </div>
+
+            <!-- Male Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Male Appointments</h4>
+                <p id="maleAppointments" class="text-3xl font-semibold text-blue-400 mt-2">0</p>
+            </div>
+
+            <!-- Female Appointments -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Female Appointments</h4>
+                <p id="femaleAppointments" class="text-3xl font-semibold text-pink-400 mt-2">0</p>
+            </div>
+
+            <!-- Average Age -->
+            <div class="bg-white p-6 rounded-lg shadow-xl text-center hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out" data-aos="fade-up">
+                <h4 class="text-lg font-bold text-gray-800">Average Age</h4>
+                <p id="averageAge" class="text-3xl font-semibold text-purple-600 mt-2">0</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 text-black text-center p-4 mt-auto">
+        <p>© Sakaar Homoeopathic Clinic</p>
+    </footer>
+
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBZvBHPp6bzmBaTaQBQ8JBsgTKM12dtEjM",
+    authDomain: "sakaar-homoeopathic-clinic.firebaseapp.com",
+    projectId: "sakaar-homoeopathic-clinic",
+    storageBucket: "sakaar-homoeopathic-clinic.appspot.com",
+    messagingSenderId: "1028319469",
+    appId: "1:1028319469:web:e449a194c35adaf1a884e4"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Modal and Form Elements
+const modal = document.getElementById('appointmentModal');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const updateOfflineAppointmentsBtn = document.getElementById('updateOfflineAppointmentsBtn');
+const appointmentForm = document.getElementById('appointmentForm');
+
+// Function to format the date in 'dd-mm-yyyy' format
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
+// Load all appointments and display them in separate sections for past and upcoming
+async function loadAppointments() {
+    const appointmentList = document.getElementById('appointmentList');
+    appointmentList.innerHTML = '<p class="text-center py-4">Loading...</p>';
+
+    const appointmentsSnapshot = await getDocs(collection(db, "appointments"));
+    let appointments = [];
+
+    appointmentsSnapshot.forEach(docSnapshot => {
+        const data = docSnapshot.data();
+        appointments.push({
+            id: docSnapshot.id,
+            ...data
+        });
+    });
+
+    // Sort appointments by date
+    appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // // Separate appointments into past and upcoming
+    // const now = new Date(); // Current date and time
+    // const pastAppointments = appointments.filter(a => new Date(a.date) < now);
+    // const upcomingAppointments = appointments.filter(a => new Date(a.date) >= now);
+
+    // Separate appointments into past, today, and upcoming
+// Get the current date (without time) for comparison
+const now = new Date();
+now.setHours(0, 0, 0, 0); // Set time to midnight to exclude time from the comparison
+
+// Separate appointments into past, today, and upcoming
+const pastAppointments = appointments.filter(a => new Date(a.date) < now);
+const todayAppointments = appointments.filter(a => new Date(a.date).toDateString() === now.toDateString());
+const upcomingAppointments = appointments.filter(a => new Date(a.date).toDateString() !== now.toDateString() && new Date(a.date) > now);
+
+    // Clear loading text
+    appointmentList.innerHTML = '';
+    let totalAppointments = 0;
+    let acceptedAppointments = 0;
+    let declinedAppointments = 0;
+    let offlineAppointments = 0;
+    let pendingAppointments = 0;
+    let maleAppointments = 0;
+    let femaleAppointments = 0;
+    let totalAge = 0;
+    let tableHTML = '';
+    // Function to render a section
+    const renderSection = (sectionTitle, appointments) => {
+        let currentDate = '';
+        let sectionHTML = `
+    <div id="${sectionTitle.replace(/\s+/g, '').toLowerCase()}-section" class="appointment-section 
+        ${sectionTitle === 'Upcoming Appointments' ? 'bg-green-50' : 
+            sectionTitle === 'Today\'s Appointments' ? 'bg-blue-50' : 'bg-red-50'} 
+        p-4 rounded-lg shadow-md my-4">
+        <h2 class="text-xl font-bold my-4 text-center 
+            ${sectionTitle === 'Upcoming Appointments' ? 'text-green-600' : 
+                sectionTitle === 'Today\'s Appointments' ? 'text-blue-600' : 'text-red-600'}">
+            ${sectionTitle}
+        </h2>
+`;
+
+
+
+    appointments.forEach(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        const formattedDate = formatDate(appointmentDate); // Format date
+
+        // Update statistics based on appointment data
+        totalAppointments++;
+        if (appointment.status === 'Accepted') acceptedAppointments++;
+        if (appointment.status === 'Declined') declinedAppointments++;
+        if (appointment.status === 'Offline') offlineAppointments++;
+        if (appointment.gender.toLowerCase() === 'male') maleAppointments++;
+        if (appointment.gender.toLowerCase() === 'female') femaleAppointments++;
+        totalAge += parseInt(appointment.age);
+        pendingAppointments = totalAppointments - (acceptedAppointments + declinedAppointments + offlineAppointments);
+
+            // Add date header if a new date is found
+            if (formattedDate !== currentDate) {
+                sectionHTML += `
+                    <h3 class="text-lg font-bold mt-4">${formattedDate}</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-300 mt-2">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b text-sm">Name</th>
+                                    <th class="py-2 px-4 border-b text-sm">Email</th>
+                                    <th class="py-2 px-4 border-b text-sm">Phone</th>
+                                    <th class="py-2 px-4 border-b text-sm">Time</th>
+                                    <th class="py-2 px-4 border-b text-sm">Age</th>
+                                    <th class="py-2 px-4 border-b text-sm">Gender</th>
+                                    <th class="py-2 px-4 border-b text-sm">Status</th>
+                                    <th class="py-2 px-4 border-b text-sm">Complaints</th>
+                                    <th class="py-2 px-4 border-b text-sm">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                currentDate = formattedDate; // Update current date
+            }
+
+            // Create a row for each appointment
+            sectionHTML += `
+                <tr>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.name}</td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.email}</td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.phone}</td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.time}</td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.age}</td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.gender}</td>
+                    <td class="py-2 px-4 border-b text-sm">
+                        <span id="status-${appointment.id}" class="font-semibold ${appointment.status === 'Accepted' ? 'text-green-600' : appointment.status === 'Declined' ? 'text-red-600' : 'text-yellow-600'}">
+                            ${appointment.status}
+                        </span>
+                    </td>
+                    <td class="py-2 px-4 border-b text-sm">${appointment.complaints || 'N/A'}</td>
+                    <td class="py-2 px-4 border-b text-sm">
+                        <button class="accept-btn bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" data-id="${appointment.id}">Accept</button>
+                        <button class="decline-btn bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mt-2" data-id="${appointment.id}">Decline</button>
+                    </td>
+                </tr>
+            `;
+
+            // When the table is done, close the tbody and table tags
+            if (appointments.indexOf(appointment) === appointments.length - 1 || appointments[appointments.indexOf(appointment) + 1].date !== appointment.date) {
+                sectionHTML += `</tbody></table></div>`;
+            }
+        });
+        sectionHTML += `</div>`;
+        return sectionHTML;
+
+    };
+
+    // Render sections for past and upcoming appointments
+    appointmentList.innerHTML =renderSection('Today\'s Appointments', todayAppointments) +
+                               renderSection('Upcoming Appointments', upcomingAppointments) +
+                                renderSection('Past Appointments', pastAppointments);
+
+    // Update statistics display
+    updateStatistics(totalAppointments, acceptedAppointments, declinedAppointments, offlineAppointments, pendingAppointments, maleAppointments, femaleAppointments, totalAge);
+
+    // Attach actions to accept/decline buttons
+    attachAppointmentActions();
+
+    function updateStatistics(totalAppointments, acceptedAppointments, declinedAppointments, offlineAppointments, pendingAppointments, maleAppointments, femaleAppointments, totalAge) {
+    // Update the statistics section
+    document.getElementById('totalAppointments').textContent = totalAppointments;
+    document.getElementById('acceptedAppointments').textContent = acceptedAppointments;
+    document.getElementById('declinedAppointments').textContent = declinedAppointments;
+    document.getElementById('offlineAppointments').textContent = offlineAppointments;
+    document.getElementById('pendingAppointments').textContent = pendingAppointments;
+    document.getElementById('maleAppointments').textContent = maleAppointments;
+    document.getElementById('femaleAppointments').textContent = femaleAppointments;
+    document.getElementById('averageAge').textContent = (totalAge / totalAppointments).toFixed(2);
+}
+    
+}
+
+// Function to attach accept/decline actions to buttons
+function attachAppointmentActions() {
+    const acceptBtns = document.querySelectorAll('.accept-btn');
+    const declineBtns = document.querySelectorAll('.decline-btn');
+
+    acceptBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const appointmentId = e.target.dataset.id;
+            const confirmAccept = confirm("Are you sure you want to accept this appointment?");
+            if (confirmAccept) {
+                await updateDoc(doc(db, "appointments", appointmentId), { status: 'Accepted' });
+                const statusSpan = document.getElementById(`status-${appointmentId}`);
+                statusSpan.textContent = 'Accepted';
+                statusSpan.classList.add('text-green-600');
+                statusSpan.classList.remove('text-red-600');
+            }
+        });
+    });
+
+    declineBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const appointmentId = e.target.dataset.id;
+            const confirmDecline = confirm("Are you sure you want to decline this appointment?");
+            if (confirmDecline) {
+                await updateDoc(doc(db, "appointments", appointmentId), { status: 'Declined' });
+                const statusSpan = document.getElementById(`status-${appointmentId}`);
+                statusSpan.textContent = 'Declined';
+                statusSpan.classList.add('text-red-600');
+                statusSpan.classList.remove('text-green-600');
+            }
+        });
+    });
+} 
+
+// Open modal when the button is clicked
+updateOfflineAppointmentsBtn.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+});
+
+// Close modal when "Close" button is clicked
+closeModalBtn.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+// Handle form submission 
+appointmentForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Get form data
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const age = document.getElementById('age').value;
+    const gender = document.getElementById('gender').value;
+    const complaints = document.getElementById('complaints').value;
+
+    // Prepare data for Firestore
+    const appointmentData = {
+        name,
+        email,
+        phone,
+        date,
+        time,
+        age,
+        gender,
+        status: 'Offline',
+        complaints
+    };
+
+    try {
+        // Add new appointment to Firestore
+        await setDoc(doc(collection(db, "appointments")), appointmentData);
+
+        // Close modal
+        modal.classList.add('hidden');
+
+        // Reset form fields
+        appointmentForm.reset();
+
+        // Reload the table to reflect the new appointment
+        loadAppointments();
+    } catch (error) {
+        console.error("Error adding appointment: ", error);
+        alert("There was an error adding the appointment.");
+    }
+});
+
+// Load appointments on page load
+loadAppointments();
+
+// Get the search input element
+const searchInput = document.getElementById('searchInput');
+
+// Function to filter appointments based on the search query
+function searchAppointments() {
+    const query = searchInput.value.toLowerCase();  // Get the search query and convert to lowercase
+    const rows = document.querySelectorAll('#appointmentList tr');  // Get all rows of appointments
+    
+    rows.forEach(row => {
+        // Skip if the row is a header or doesn't have appointment data
+        if (row.querySelector('th')) {
+            return; // Skip the header row
+        }
+        
+        // Get the values from each column of the row
+        const name = row.querySelector('td:nth-child(1)').textContent.toLowerCase();  // Name column
+        const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();  // Email column
+        const phone = row.querySelector('td:nth-child(3)').textContent.toLowerCase();  // Phone column
+        const time = row.querySelector('td:nth-child(4)').textContent.toLowerCase();  // Time column
+        const age = row.querySelector('td:nth-child(5)').textContent.toLowerCase();  // Age column
+        const gender = row.querySelector('td:nth-child(6)').textContent.toLowerCase();  // Gender column
+        const status = row.querySelector('td:nth-child(7)').textContent.toLowerCase();  // Status column
+        const complaints = row.querySelector('td:nth-child(8)').textContent.toLowerCase();  // Complaints column
+
+        // If any column matches the search query, show the row; otherwise, hide it
+        if (name.includes(query) || email.includes(query) || phone.includes(query) ||
+            time.includes(query) || age.includes(query) || gender.includes(query) ||
+            status.includes(query) || complaints.includes(query)) {
+            row.style.display = '';  // Show the row
+        } else {
+            row.style.display = 'none';  // Hide the row
+        }
+    });
+}
+
+// Event listener for search input field (to trigger search as user types)
+searchInput.addEventListener('input', searchAppointments);
+
+
+AOS.init({
+    duration: 1000,  // Animation duration in milliseconds
+    once: true, 
+    });
+
+    const menuButton = document.getElementById('menuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuLinks = document.querySelectorAll('#mobileMenu a');
+
+// Toggle the mobile menu when the hamburger button is clicked
+menuButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+});
+
+// Close the mobile menu when a menu item is clicked
+menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+    });
+});
+
+</script>
+    
+</body>
+</html>
