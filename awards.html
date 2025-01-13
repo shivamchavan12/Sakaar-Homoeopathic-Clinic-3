@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sakaar Homoeopathic Clinic</title>
     <!-- Link to Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="home-page.css">
@@ -14,6 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
 </head>
 <style>
     /* Global Reset for body */
@@ -22,7 +23,22 @@ body {
     padding: 0;
     width: 100%;
     overflow-x: hidden; /* Prevent horizontal scrolling */
+    background: linear-gradient(45deg, #fbeaea, #f9f4f4, #fdecec, #fffafa);
+    background-size: 400% 400%; /* Creates a large background to animate */
+  animation: gradientAnimation 6s ease infinite; /* Smooth infinite animation */
 }
+@keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
 
 /* Ensures consistent box-sizing across all browsers */
 html {
@@ -43,7 +59,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to right, #800000, #FF0000); /* Gradient background */
+    background: linear-gradient(to right, #0D5855, #0D7D6B); /* Gradient */
     color: white;
     border-radius: 50%; /* Circular shape */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -82,17 +98,98 @@ html {
         font-size: 18px;
     }
 }
+/* Award Card Hover Effect */
+.award-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
+        .award-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image Hover Effect */
+        .award-card img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .award-card:hover img {
+            transform: scale(1.05);
+            opacity: 0.85;
+        }
+
+        /* Make the container background transparent */
+        #awards-section {
+            background-color: transparent;
+        }
+
+        /* Responsive Styling for Headings */
+        h2 {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #800000;
+        }
+
+        /* Responsive Grid System */
+        .award-card {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .award-card {
+                margin: 1rem 0;
+            }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+.award-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.award-card:hover {
+    transform: translateY(-8px);
+}
+
+.image-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.award-image {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.award-card:hover .award-image {
+    transform: scale(1.08);
+}
+
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.award-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
 </style>
 <body class="bg-white text-maroon-800 flex flex-col min-h-screen">
     <!-- Navigation Bar -->
-    <header class="bg-red-800 text-white shadow-lg sticky top-0 z-50">
+    <header style="font-family: 'Quicksand', sans-serif;" class="bg-[#0D5855] text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex items-center justify-between py-4 px-6">
             <!-- Logo and Title with redirect to index.html -->
             <a href="index.html" class="flex items-center group">
-                <img src="logo.png" alt="Clinic Logo" class="w-12 h-12 rounded-full object-cover mr-4"> <!-- White border -->
-                <span class="text-3xl font-extrabold tracking-wide relative group hover:text-yellow-400 transition duration-300">
-                    Sakaar Homoeopathic
+                <img src="logo2.jpg" alt="Clinic Logo" class="w-14 h-14 rounded-full object-cover mr-4"> 
+                <span class="text-3xl font-bold tracking-widest p-1 relative group hover:text-[#F1E34A] transition duration-300">
+                    SAKAAR HOMOEOPATHY
                     <!-- Underline span -->
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </span>
@@ -100,27 +197,27 @@ html {
     
             <!-- Desktop Navigation Menu -->
             <nav class="hidden lg:flex space-x-8">
-                <a href="index.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a href="index.html" class=" text-lg relative hover:text-[#F1E34A] transition duration-300" stlye="font-family: 'Cambria', 'Times New Roman', serif;">
                     Home
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
-                <a href="awards.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a href="awards.html" class=" text-lg relative hover:text-[#F1E34A] transition duration-300">
                     Awards
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
-                <a href="testimonials.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a href="testimonials.html" class=" text-lg relative hover:text-[#F1E34A] transition duration-300">
                     Testimonials
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
-                <a href="appointment.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a href="appointment.html" class=" text-lg relative hover:text-[#F1E34A] transition duration-300">
                     Appointment
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
-                <a href="#contact" id="contact-link" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                <a href="#contact" class=" text-lg relative hover:text-[#F1E34A] transition duration-300">
                     Contact
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
-                </a>                
-                <a id="auth-link" href="login.html" class="font-bold text-lg relative hover:text-yellow-400 transition duration-300">
+                </a>
+                <a id="auth-link" href="login.html" class=" text-lg relative hover:text-[#F1E34A] transition duration-300">
                     Login
                     <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300"></span>
                 </a>
@@ -135,117 +232,33 @@ html {
         </div>
     
         <!-- Mobile Navigation Menu -->
-        <nav id="mobile-menu" class="hidden lg:hidden bg-red-600 text-white p-4 space-y-4 shadow-lg">
-            <a href="index.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Home</a>
-            <a href="awards.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Awards</a>
-            <a href="testimonials.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Testimonials</a>
-            <a href="appointment.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Appointment</a>
-            <a href="#contact" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">Contact</a>
-            <a id="mobile-auth-link" href="login.html" class="block font-bold text-lg px-4 py-2 hover:bg-white hover:text-red-600 rounded-lg transition duration-300">
+        <nav id="mobile-menu" class="hidden lg:hidden bg-[#0D5855] text-white p-4 space-y-4 shadow-lg">
+            <a href="index.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Home</a>
+            <a href="awards.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Awards</a>
+            <a href="testimonials.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Testimonials</a>
+            <a href="appointment.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Appointment</a>
+            <a href="#contact" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">Contact</a>
+            <a id="mobile-auth-link" href="login.html" class="block  text-lg px-4 py-2 hover: hover:text-[#f1e34a] rounded-lg transition duration-300">
                 Login
             </a>
         </nav>
     </header>
+    
+   
 
-    <section id="awards" class="container mx-auto my-8 p-6 bg-white">
-        <h2 class="text-4xl font-bold text-[#800000] mb-8 text-center animate__animated animate__fadeInDown hover:text-[#b30000]">
-            Awards and Recognition
-        </h2>
-    
-        <!-- Award Cards -->
-        <div class="space-y-8">
-            <!-- Award 1 (Text Left, Image Right) -->
-            <div class="flex flex-col sm:flex-row sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInLeft" data-aos="fade-right">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">1. Paper Presentation 2nd International AYUSH Conference, Dubai-2024</h3>
-                    <p class="text-gray-700 my-4">• Paper topic: ‘Efficacy of Homoeopathic Simillimum in Hypothyroidism: Current Perspectives and Future Directions.’</p>
-                    <p class="text-gray-700">• Showcased the 6 AYUSH sciences through posters and presentations.</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image1.jpg" alt="Paper Presentation" class="w-52 h-52 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
+    <div id="awards-section" class="py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header Section -->
+            <div class="text-center mb-16" data-aos="fade-down">
+                <span class="text-[#800000] font-semibold tracking-wide uppercase text-sm">Achievements</span>
+                <h2  style="font-family: 'Quicksand', sans-serif;" class="mt-0 text-5xl font-bold text-[#0D5855] tracking-tight">Awards & Recognition</h2>
+                <div class="mt-4 h-1 w-24 bg-[#800000] mx-auto rounded-full"></div>
             </div>
-    
-            <!-- Award 2 (Text Right, Image Left) -->
-            <div class="flex flex-col sm:flex-row-reverse sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInRight" data-aos="fade-left">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">2. Homoeopathic Symposium, Delhi-2024</h3>
-                    <p class="text-gray-700 my-4">• Celebrated World Homoeopathy Day'24 in the presence of the Honorable President of India.</p>
-                    <p class="text-gray-700">• Participated at Yashobhoomi International Convention Center, Delhi.</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image2.jpg" alt="Symposium Image" class="w-52 h-52 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 3 (Text Left, Image Right) -->
-            <div class="flex flex-col sm:flex-row sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInLeft" data-aos="fade-right">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">3. Women’s Day-2024 Session, PCSIC-2024</h3>
-                    <p class="text-gray-700 my-4">• Topic: 'Importance of Health for Women Entrepreneurs.'</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image3.jpg" alt="Women’s Day Image" class="w-32 h-32 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 4 (Text Right, Image Left) -->
-            <div class="flex flex-col sm:flex-row-reverse sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInRight" data-aos="fade-left">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">4. Health Check-Up Camp for Women, Lions Club-2024</h3>
-                    <p class="text-gray-700 my-4">• Free Check-up for female parents and teachers at Pune.</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image4.jpg" alt="Women’s Day Image" class="w-32 h-32 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 5 (Text Left, Image Right) -->
-            <div class="flex flex-col sm:flex-row sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInLeft" data-aos="fade-right">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">5. Felicitation, Lions Club, 2024</h3>
-                    <p class="text-gray-700 my-4">• Honored as 'Arogyavardhini' for outstanding health services.</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image5.jpg" alt="Felicitation Image" class="w-32 h-32 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 6 (Text Right, Image Left) -->
-            <div class="flex flex-col sm:flex-row-reverse sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInRight" data-aos="fade-left">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">6. Felicitation, Maharashtra Sahitya Parishad-2022</h3>
-                    <p class="text-gray-700 my-4">• Felicitated on the occasion of Women's Day for contribution in the health sector by Maharashtra Sahitya Parishad PCMC, Pune- March, 2022.</p>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image6.jpg" alt="Maharashtra Sahitya Parishad Image 1" class="w-48 h-48 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 7 (Text Left, Image Right) -->
-            <div class="flex flex-col sm:flex-row sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInLeft" data-aos="fade-right">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">7. 9th Annual Women Power Summit & Awards by the Billenium Divas Fund, at National Stock Exchange BKC</h3>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image7.jpg" alt="Women Power Summit Image 1" class="w-32 h-32 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
-    
-            <!-- Award 8 (Text Right, Image Left) -->
-            <div class="flex flex-col sm:flex-row-reverse sm:space-x-8 sm:space-y-0 space-y-6 animate__animated animate__fadeInRight" data-aos="fade-left">
-                <div class="award-container w-full sm:w-1/2 p-6 bg-white rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-semibold text-[#800000] hover:text-[#b30000]">8. Felicitation by The Lions' Club of Pune-Phoenix Chapter</h3>
-                </div>
-                <div class="award-images w-full sm:w-1/2 mt-4 sm:mt-0">
-                    <img src="image8.jpg" alt="Lions' Club Image 1" class="w-32 h-32 object-cover rounded-lg shadow-md transform hover:scale-110 transition duration-500 mx-auto">
-                </div>
-            </div>
+
+            <!-- Awards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="awards-grid"></div>
         </div>
-    </section>
-    
-    
-
+    </div>
 
     <!-- Footer -->
     <footer class="bg-gray-200 text-gray-800 py-8 relative overflow-hidden">
@@ -263,41 +276,45 @@ html {
                     </p>
                     <p class="mb-2 flex items-center justify-center text-gray-600">
                         <i class="fas fa-envelope text-gray-600 mr-2"></i>
-                        <span>dr.sarikavaidya@example.com</span>
+                        <span>sakaarhomoeopathy@gmail.com</span>
                     </p>
                     <p class="mb-2 flex items-center justify-center text-gray-600">
                         <i class="fas fa-phone text-gray-600 mr-2"></i>
-                        <span>+1 234 567 890</span>
+                        <span>+91 9762079771</span>
+                    </p>
+                    <p class="mb-2 flex items-center justify-center text-gray-600">
+                        <i class="fas fa-phone text-gray-600 mr-2"></i>
+                        <span>+91 9422350717</span>
                     </p>
                 </div>
     
                 <!-- Social Media Links -->
                 <div class="text-center group hover:text-gray-700 transition-all duration-300">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block group-hover:text-maroon-700">
-                        Follow Us
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-bottom-left"></span>
-                    </h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="https://facebook.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                                <i class="fab fa-facebook-f mr-2"></i>
-                                <span>Facebook</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://twitter.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                                <i class="fab fa-twitter mr-2"></i>
-                                <span>Twitter</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
-                                <i class="fab fa-instagram mr-2"></i>
-                                <span>Instagram</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        <h3 class="text-xl font-semibold mb-4 text-gray-700 relative inline-block group-hover:text-maroon-700">
+            Follow Us
+            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-bottom-left"></span>
+        </h3>
+        <ul class="space-y-3">
+            <li>
+                <a href="https://youtube.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                    <i class="fab fa-youtube mr-2"></i>
+                    <span>YouTube</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.linkedin.com/in/dr-sarika-vaidya/" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                    <i class="fab fa-linkedin mr-2"></i>
+                    <span>LinkedIn</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://instagram.com" target="_blank" class="flex items-center justify-center text-gray-800 hover:text-gray-600 transition-all duration-300">
+                    <i class="fab fa-instagram mr-2"></i>
+                    <span>Instagram</span>
+                </a>
+            </li>
+        </ul>
+    </div>
     
                 <!-- Our Location -->
                 <div class="text-center group hover:text-gray-700 transition-all duration-300">
@@ -306,20 +323,21 @@ html {
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transform scale-x-0 transition-transform duration-300 origin-bottom-left group-hover:scale-x-100"></span>
                     </h3>
                     <p class="mb-2 text-gray-600">
-                        <span class="flex items-center">
+                        <span class="flex items-center justify-center">
                             <i class="fas fa-map-marker-alt text-gray-600 mr-2"></i>
-                            <strong>Address:</strong> 123 Wellness Street, Cityname, Country
+                            <strong>Address:</strong>
                         </span>
+                        <p class="text-center">Office no. 401, Wisteriaa Fortune, Hinjawadi Marunji Rd, opp. to Hotel Silver Spoon, Wakad, Pune, Maharashtra 411057</p>
                     </p>
                     <a href="https://www.google.com/maps/dir/?api=1&origin=&destination=Sakaar+Homoeopathy,+18.6034308,73.7430896" 
-                        target="_blank" class="text-gray-800 underline-effect transition-all duration-300 group-hover:text-maroon-700"  style="margin-top:25px;">
+                        target="_blank" class="text-gray-800 underline-effect transition-all duration-300 group-hover:text-maroon-700"  style="margin-top:15px;">
                         View On Map
                     </a>
                 </div>
     
                 <!-- Map Section -->
                 <div class="flex-1 group hover:scale-105 transition-all duration-500" data-aos="fade-left" data-aos-duration="1000">
-                    <h3 class="text-xl font-semibold mb-4 text-maroon-700 group-hover:text-gray-700">Find Us on Map</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800 group-hover:text-gray-700">Find Us on Map</h3>
                     <div class="w-full h-32 rounded-lg overflow-hidden shadow-lg border border-gray-700 group-hover:shadow-xl">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3778.490536379176!2d73.7430896!3d18.6034308!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bb7b7c8ad56b:0x265de2f391b737e0!2sSakaar+Homoeopathy!5e0!3m2!1sen!2sin!4v1698243200000!5m2!1sen!2sin&zoom=17" 
@@ -336,8 +354,8 @@ html {
             <!-- Floating Icon -->
             <a href="appointment.html" id="appointment-icon">
                 <i class="fas fa-calendar-check"></i>
-            </a>
-    
+           </a>
+         
             <!-- Footer Bottom -->
             <div class="mt-8 text-center text-sm border-t border-gray-500 pt-4 group hover:text-maroon-700 transition-all duration-300">
                 <p>&copy; 2024 Homoeopathy Clinic. All rights reserved.</p>
@@ -408,9 +426,95 @@ document.addEventListener('DOMContentLoaded', function () {
                 element.classList.add('show');
             });
         });
+        const awardsData = [
+            {
+                image: 'image1.jpg',
+                title: 'Paper Presentation 2nd International AYUSH Conference, Dubai-2024',
+                description: '• Attended the 2nd International Ayush Conference in Dubai, held at the Dubai World Trade Centre (13-15 January 2024).<br> • Presented my work on \'Efficacy of Homoeopathic Simillimum in Hypothyroidism: Current Perspectives and Future Directions\'.<br> • Gained valuable insights and experiences from the conference, which highlighted the capabilities of the 6 novel medical sciences, including Homoeopathy.',
+                year: '2024'
+            },
+            {
+                image: 'image2.jpg',
+                title: 'Homoeopathic Symposium, Delhi-2024',
+                description: '• Attended the World Homoeopathy Day 2024 celebration, graced by the Honourable President of India as the chief guest at a CCRH, AYUSH, NIH event.<br> • Proud to witness the grandeur of Homoeopathy and honor the profession at the Yashobhoomi International Convention Center, Delhi.',
+                year: '2024'
+            },
+            {
+                image: 'image3.jpg',
+                title: 'Womens Day-2024 Session, PCSIC-2024',
+                description: '• Celebrated Women\'s Day 2024 at the Pimpri Chinchwad Start-up Incubation Centre (PCSIC) with dynamic women entrepreneurs.<br> • Delivered a session on \'Importance of Health for Women Entrepreneurs While Pursuing Their Journey in Entrepreneurship.',
+                year: '2024'
+            },
+            {
+                image: 'image4.jpg',
+                title: 'Health Check-Up Camp for Women, Lions Club-2024',
+                description: '• Organized a Health Check-Up Camp for Women in collaboration with the Lions Club-2024, offering free health screenings for female parents and teachers in Pune.<br> • Proud to contribute to the well-being of women in our community by providing essential healthcare services at no cost.',
+                year: '2024'
+            },
+            {
+                image: 'image5.jpg',
+                title: 'Felicitation, Lions Club, 2024',
+                description: '• Honored to receive the \'Arogyavardhini\' award from the Women Health Care Committee of the Lion\'s International Club for outstanding dedication to women\'s healthcare.<br> • Felicitated by Dr. Jyotsna Sanjay Kulkarni, the \'First Woman Laparoscopic Surgeon of the World,\' in recognition of my services.',
+                year: '2024'
+            },
+            {
+                image: 'image6.jpg',
+                title: 'Felicitation, Maharashtra Sahitya Parishad-2022',
+                description: '• Felicited by Maharashtra Sahitya Parishad PCMC, Pune, on Women’s Day 2022 for my contributions to the health sector.<br> • Recognized for dedication and service to women\'s health at the prestigious event held in March 2022.',
+                year: '2022'
+            },
+            {
+                image: 'image7.jpg',
+                title: '9th Annual Women Power Summit & Awards',
+                description: '• Participated in the \'9th Annual Women Power Summit & Awards\' organized by the Billenium Divas Fund at the National Stock Exchange BKC.<br> • Acknowledged with the \'Woman Power in Wellness\' award, recognizing my contributions to the wellness sector.<br> • Celebrated as another success of Sakaar Homoeopathy, highlighting the growing impact of my practice.',
+                year: '2024'
+            },
+            {
+                image: 'image8.jpg',
+                title: 'Felicitation by The Lions\' Club of Pune-Phoenix Chapter',
+                description: '• Received recognition and appreciation on Doctors\' Day from colleagues and well-wishers. <br>• Honored by the felicitation from The Lions\' Club of Pune Phoenix for my contributions to the field.',
+                year: '2024'
+            }
+        ];
+
+        function createAwardCard(award, index) {
+            return `
+                <div  style="font-family: Cambria,serif;" class="award-card rounded-xl overflow-hidden bg-white shadow-lg" data-aos="fade-up" data-aos-delay="${index * 100}">
+                    <div class="image-container h-72">
+                        <img 
+                            src="${award.image}" 
+                            alt="${award.title}" 
+                            class="award-image w-full h-full object-cover"
+                            onerror="this.src='/api/placeholder/400/300'"
+                        />
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-4 right-6 glass-effect px-4 py-1 rounded-full text-sm font-medium text-indigo-600">
+                            ${award.year}
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#0D5855] mb-3">${award.title}</h3>
+                        <p class="text-gray-600 text-sm">${award.description}</p>
+                    </div>  
+                </div>
+            `;
+        }
+
+        function initializeAwards() {
+            const grid = document.getElementById('awards-grid');
+            grid.innerHTML = awardsData.map((award, index) => createAwardCard(award, index)).join('');
+        }
+
+        // Initialize AOS with modern settings
         AOS.init({
-        duration: 1000,  // Duration of the animation in ms
-    });
+            duration: 1000,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            offset: 100,
+            delay: 500
+        });
+
+        // Initialize awards when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeAwards);
     </script>
 </body>
 </html>
