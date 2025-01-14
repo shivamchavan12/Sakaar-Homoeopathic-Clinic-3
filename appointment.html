@@ -193,28 +193,40 @@ html {
     </nav>
 </header>
 
-<main class="container mx-auto p-4 flex-grow max-w-3xl">
-    <div id="login-required-message" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-        <p class="font-bold">Login Required</p>
-        <p>Please <a href="login.html" class="underline">login</a> to book an appointment.</p>
+<main  style="font-family: Cambria,serif;" class="container mx-auto p-4 flex-grow max-w-3xl">
+    <div id="login-required-message" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded-lg shadow-md max-w-3xl mx-auto">
+        <div class="flex items-center space-x-3">
+            <!-- Icon (optional) -->
+            <svg class="w-6 h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l-7 7 7 7z" />
+            </svg>
+            
+            <div>
+                <p class="font-bold text-lg">Login Required</p>
+                <p class="text-sm">
+                    Please <a href="login.html" class="underline text-yellow-700 hover:text-yellow-900 transition duration-300">login</a> to book an appointment.
+                </p>
+            </div>
+        </div>
     </div>
     <section id="appointment" class="bg-white rounded-lg shadow-lg p-4 md:p-6">
-        <h2 class="text-2xl md:text-3xl font-bold text-[#800000] mb-6 text-center transition duration-300 hover:text-[#b30000]">
-            Book Appointment
+        <h2 style="font-family: 'Quicksand', sans-serif;"  class="text-2xl md:text-3xl font-bold text-[#0D5855] mb-6 text-center transition duration-300 hover:text-[#b30000]">
+            Request An Appointment
         </h2>
 
         <!-- Flex Container: Images + Form -->
         <div class="flex flex-col lg:flex-row items-center lg:items-start lg:space-x-8">
             
            <!-- Left Part: Images -->
-        <div class="flex-1 flex flex-col items-center justify-center space-y-4">
-                <img src="homo1.png" alt="Image 1"
-                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
-                <img src="homo2.png" alt="Image 2"
-                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
-                <img src="homo3.png" alt="Image 2"
-                    class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+           <div class="flex-1 flex flex-col items-center justify-center space-y-4 hidden md:flex">
+            <img src="homo1.png" alt="Image 1"
+                class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+            <img src="homo2.png" alt="Image 2"
+                class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
+            <img src="homo3.png" alt="Image 3"
+                class="w-48 h-auto rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300">
         </div>
+        
 
             <!-- Right Part: Appointment Form -->
             <div class="flex-1 w-full lg:max-w-sm">
@@ -541,7 +553,7 @@ html {
                 emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this)
             ]);
 
-            alert('Appointment booked successfully!');
+            alert('Appointment requested. Kindly visit your profile page to monitor the status');
             form.reset();
         } catch (error) {
             console.error('Error:', error);
