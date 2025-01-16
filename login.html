@@ -671,7 +671,7 @@ function renderAppointments(upcomingAppointments, previousAppointments, userName
 
 function rescheduleAppointment(event) {
     const appointmentId = event.target.dataset.id;
-    
+
     // Get current date and time in local timezone
     const now = new Date();
     const today = now.toISOString().split('T')[0];
@@ -752,7 +752,7 @@ function rescheduleAppointment(event) {
         }
     });
 
-    document.getElementById('confirm-reschedule').addEventListener('click', () => {
+    document.getElementById('confirm-reschedule').addEventListener('click', async () => {
         const newDate = document.getElementById('new-date').value;
         const newTime = document.getElementById('new-time').value;
 
@@ -770,60 +770,102 @@ function rescheduleAppointment(event) {
             return;
         }
 
-        // Validate business hours
-        const timeStr = newTime;
-        if (timeStr < BUSINESS_START || timeStr > BUSINESS_END) {
-            alert('Please select a time between 9:00 AM and 5:00 PM');
-            return;
-        }
+        try {
+            // Fetch appointment details from Firestore
+            const appointmentDoc = await db.collection('appointments').doc(appointmentId).get();
+            const appointmentData = appointmentDoc.data();
 
-        // Update the appointment in the database
-        db.collection('appointments').doc(appointmentId).update({
-        date: newDate,
-        time: newTime,
-        timestamp: newDateTime.toISOString(),
-        rescheduled: true,
-    })
-    .then(() => {
-        // Send email notification with proper promise handling
-        emailjs.sendForm("service_9rokqwm",  // Your service ID
-            "template_aug55bm",
-            this) // Your template ID
-    })
-    .then((response) => {
-        console.log("Email sent successfully:", response);
-        alert('Appointment rescheduled successfully.');
-        document.body.removeChild(dialog);
-        loadProfilePage();
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Error rescheduling appointment or sending email. Please try again.');
+            // Update the appointment in the database
+            await db.collection('appointments').doc(appointmentId).update({
+                date: newDate,
+                time: newTime,
+                timestamp: newDateTime.toISOString(),
+                rescheduled: true,
+                status: 'pending',
+            });
+
+            // Create a temporary form for EmailJS
+            const form = document.createElement('form');
+            form.style.display = 'none';
+            form.innerHTML = `
+                <input type="text" name="name" value="${appointmentData.name}" />
+                <input type="text" name="phone" value="${appointmentData.phone}" />
+                <input type="email" name="email" value="${appointmentData.email}" />
+                <input type="text" name="gender" value="${appointmentData.gender}" />
+                <input type="text" name="date" value="${newDate}" />
+                <input type="text" name="time" value="${newTime}" />
+                <input type="text" name="age" value="${appointmentData.age}" />
+            `;
+            document.body.appendChild(form);
+
+            // Send email notification using EmailJS
+            await emailjs.sendForm('service_6c19psq', 'template_5i788ib', form);
+            console.log('Email sent successfully');
+            alert('Appointment rescheduled successfully.');
+            
+            form.remove();
+            document.body.removeChild(dialog);
+
+            // Optionally refresh the page or update the UI
+            loadProfilePage();
+        } catch (error) {
+            console.error('Error rescheduling appointment or sending email:', error);
+            alert('Error rescheduling appointment or sending email. Please try again.');
+        }
     });
-        });
 }
 
 function deleteAppointment(event) {
     const appointmentId = event.target.dataset.id;
 
     if (confirm('Are you sure? Once deleted, you cannot rebook for 15 days.')) {
-        db.collection('appointments').doc(appointmentId).delete()
-            .then(() => {
+        // Fetch appointment details before deletion
+        db.collection('appointments').doc(appointmentId).get()
+            .then((doc) => {
+                if (!doc.exists) {
+                    throw new Error('Appointment not found');
+                }
+
+                const appointmentData = doc.data();
                 const user = firebase.auth().currentUser;
 
-                db.collection('users').doc(user.uid).update({
-                    restrictedUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
-                });
+                // Delete the appointment
+                return db.collection('appointments').doc(appointmentId).delete()
+                    .then(() => {
+                        // Restrict the user for 15 days
+                        return db.collection('users').doc(user.uid).update({
+                            restrictedUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
+                        }).then(() => appointmentData); // Pass appointmentData for email
+                    });
+            })
+            .then((appointmentData) => {
+                // Create a temporary form for EmailJS
+                const form = document.createElement('form');
+                form.style.display = 'none';
+                form.innerHTML = `
+                    <input type="text" name="to_email" value="parkar.nikhil1406@gmail.com">
+                    <input type="text" name="name" value="${appointmentData.name}">
+                    <input type="text" name="phone" value="${appointmentData.phone}">
+                    <input type="text" name="email" value="${appointmentData.email}">
+                    <input type="text" name="gender" value="${appointmentData.gender}">
+                    <input type="text" name="date" value="${appointmentData.date}">
+                    <input type="text" name="age" value="${appointmentData.age}">
+                `;
+                document.body.appendChild(form);
 
-                emailjs.send("service_9rokqwm", "template_8l9vl4l", {
-                    to_email: "sakaarhomoeopathy@gmail.com",
-                });
-
-                alert('Appointment deleted.');
+                // Send email using EmailJS
+                return emailjs.sendForm("service_9rokqwm", "template_aug55bm", form)
+                    .then(() => {
+                        document.body.removeChild(form); // Clean up the form after use
+                    });
+            })
+            .then(() => {
+                alert('Appointment deleted and notification sent.');
                 loadProfilePage();
             })
             .catch((error) => {
-                console.error('Error deleting appointment:', error);
+                console.error('Error:', error);
+                alert('Error deleting appointment or sending email. Please try again.');
             });
     }
 }
@@ -834,7 +876,7 @@ function deleteAppointment(event) {
 
         db.collection('appointments').doc(appointmentId).update({ status })
             .then(() => {
-                emailjs.send("service_6c19psq", "template_5i788ib", {
+                emailjs.send("service_9rokqwm", "template_8l9vl4l", {
                     to_email: userEmail,
                     status,
                 });
