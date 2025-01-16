@@ -101,7 +101,91 @@ html {
     }
 }
 
+#faq {
+            padding: 3rem 1rem;
+            background: linear-gradient(to right, #d4f1f4, #d9ead3);
+        }
 
+        #faq h2 {
+            font-size: 2rem;
+            color: #0D5855;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #faq p {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .faq-item {
+            background: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .faq-question {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0D5855;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .faq-question svg {
+    width: 24px; /* Fixed width */
+    height: 24px; /* Fixed height */
+    min-width: 24px; /* Prevent shrinking */
+    min-height: 24px; /* Prevent shrinking */
+    transition: transform 0.3s ease;
+}
+
+        .faq-answer {
+            padding: 1rem 1.5rem;
+            background: #f9fafb;
+            color: #374151;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .faq-question svg.rotate-180 {
+            transform: rotate(180deg);
+        }
+
+        @media (min-width: 640px) {
+            #faq h2 {
+                font-size: 2.5rem;
+            }
+
+            #faq p {
+                font-size: 1.2rem;
+            }
+
+            .faq-question {
+                font-size: 1.1rem;
+            }
+
+            .faq-answer {
+                font-size: 1rem;
+            }
+        }
 </style>
 <body class="text-maroon-800 flex flex-col min-h-screen">
     <!-- Navigation Bar -->
@@ -365,9 +449,76 @@ html {
             </div>
         </section>
     </main>
-</main>
+</main>    
 
-<footer class="bg-gray-200 text-gray-800 py-8 relative overflow-hidden">
+<section id="faq" style="font-family: Cambria,serif;">
+    <div class="max-w-4xl mx-auto">
+        <h2 style="font-family: 'Quicksand', sans-serif;" class="font-bold">Frequently Asked Questions</h2>
+        <p>Explore answers to the most common questions about homeopathy and our services.</p>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What is Homeopathy and how does it work?</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                Homeopathy is a holistic approach to medicine that uses natural remedies to stimulate the body's healing processes. Remedies are highly diluted substances aimed at triggering the body's defenses.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What kind of issues can be treated with homeopathy?</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                Homeopathy can treat a wide range of acute and chronic conditions, including allergies, asthma, skin disorders, digestive issues, and emotional concerns like stress and anxiety.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How long does it take to see results from homeopathic treatment?</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                The time to see results varies. Acute conditions may improve within hours or days, while chronic conditions might take weeks or months.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Is homeopathy treatment safe?</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                Yes, homeopathy is safe for all ages. Remedies are natural, non-toxic, and free from significant side effects.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How is homeopathy different from conventional medicine?</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                Homeopathy focuses on holistic healing by addressing root causes of illness, while conventional medicine often targets symptoms with drugs or surgeries.
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer style="background: linear-gradient(to right, #d4f1f4, #d9ead3);" class="border-t border-gray-500  text-gray-800 py-8 relative overflow-hidden">
     <section id="contact">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 md:px-12">
             <!-- Contact Information -->
@@ -630,7 +781,16 @@ AOS.init({});
                     <p class="text-[#555] leading-relaxed">${treatment.description}</p>
                 </div>`;
         });
-       
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('svg');
+
+            // Toggle answer visibility
+            answer.classList.toggle('active');
+
+            // Rotate icon
+            icon.classList.toggle('rotate-180');
+        }
     </script>
 </body>
 </html>
