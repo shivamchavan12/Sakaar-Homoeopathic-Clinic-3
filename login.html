@@ -799,7 +799,7 @@ function rescheduleAppointment(event) {
             document.body.appendChild(form);
 
             // Send email notification using EmailJS
-            await emailjs.sendForm('service_6c19psq', 'template_aug55bm', form);
+            await emailjs.sendForm('service_9rokqwm', 'template_aug55bm', form);
             console.log('Email sent successfully');
             alert('Appointment rescheduled successfully.');
             
@@ -854,7 +854,7 @@ function deleteAppointment(event) {
                 document.body.appendChild(form);
 
                 // Send email using EmailJS
-                return emailjs.sendForm("service_9rokqwm", "template_5i788ib", form)
+                return emailjs.sendForm("service_9rokqwm", "template_8l9vl4l", form)
                     .then(() => {
                         document.body.removeChild(form); // Clean up the form after use
                     });
