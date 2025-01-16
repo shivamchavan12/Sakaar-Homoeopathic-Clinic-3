@@ -450,7 +450,7 @@ html {
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    emailjs.init("XJ0w7wtg2pCTEXyAf");
+    emailjs.init("ivqtxHaFbfs28Nnv0");
 
     function toggleFormElements(enable) {
         formInputs.forEach(element => {
@@ -555,7 +555,7 @@ html {
 
             await Promise.all([
                 saveAppointmentToFirestore(appointmentData, user.uid),
-                emailjs.sendForm('service_x4wl48l', 'template_ddgfwqd', this)
+                emailjs.sendForm('service_cfyvjy7', 'template_lo7056c', this)
             ]);
 
             alert('Appointment requested. Kindly visit your profile page to monitor the status');
